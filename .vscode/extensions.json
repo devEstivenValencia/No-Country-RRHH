@@ -1,0 +1,13 @@
+{
+	"recommendations": [
+		"esbenp.prettier-vscode",
+		"dbaeumer.vscode-eslint",
+		"vivaxy.vscode-conventional-commits",
+		"mikehanson.auto-barrel",
+		"wallabyjs.console-ninja",
+		"bradlc.vscode-tailwindcss",
+		"aaron-bond.better-comments",
+		"usernamehw.errorlens",
+		"formulahendry.auto-close-tag"
+	]
+}

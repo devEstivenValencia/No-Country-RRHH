@@ -1,0 +1,21 @@
+{
+	"arrowParens": "avoid",
+	"bracketSameLine": false,
+	"bracketSpacing": true,
+	"jsxSingleQuote": true,
+	"plugins": ["@trivago/prettier-plugin-sort-imports"],
+	"printWidth": 120,
+	"quoteProps": "consistent",
+	"semi": false,
+	"singleQuote": true,
+	"trailingComma": "none",
+	"useTabs": true,
+	"importOrder": [
+		"<THIRD_PARTY_MODULES>",
+		"^@internal/(.*)$",
+		"^[./].*(?<!\\.(c|le|sc)ss)$",
+		"^[.]/[-a-zA-Z0-9_]+[.](module)[.](css|scss|less)$"
+	],
+	"importOrderSeparation": true,
+	"importOrderSortSpecifiers": true
+}

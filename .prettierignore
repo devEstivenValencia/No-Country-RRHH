@@ -1,0 +1,8 @@
+public/
+node_modules/
+.next/
+.git/
+next-env.d.ts
+.prettierignore
+.gitignore
+.sassdocrc
