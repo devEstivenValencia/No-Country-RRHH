@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('sector')->nullable();
             $table->json('location')->nullable();
             $table->json('contact')->nullable();
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

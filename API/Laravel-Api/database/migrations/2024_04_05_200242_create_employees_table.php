@@ -24,7 +24,7 @@ return new class extends Migration
             $table->date('finish_date')->nullable();
             $table->enum('state', ['active', 'inactive'])->nullable();
             $table->json('role')->nullable();
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

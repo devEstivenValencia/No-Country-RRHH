@@ -12,6 +12,8 @@ class Absence extends Model
     use HasFactory;
     use HasUuids;
 
+    const UPDATED_AT = null;
+
     protected $fillable = [
         'employee_id',
         'date',

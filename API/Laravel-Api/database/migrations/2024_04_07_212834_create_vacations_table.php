@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('final_date')->nullable();
             $table->string('comments')->nullable();
             $table->enum('state', ['pending', 'approved', 'refused'])->default('pending');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

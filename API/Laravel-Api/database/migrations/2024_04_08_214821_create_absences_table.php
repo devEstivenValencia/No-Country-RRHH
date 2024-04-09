@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignUuid('employee_id')->references('id')->on('employees');
             $table->date('date');
             $table->string('justification')->nullable();
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

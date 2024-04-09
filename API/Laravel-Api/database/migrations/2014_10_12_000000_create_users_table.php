@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('password');
             $table->boolean('disabled')->default(false);
             $table->rememberToken();
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

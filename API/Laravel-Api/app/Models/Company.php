@@ -13,6 +13,8 @@ class Company extends Model
     use HasFactory;
     use HasUuids;
 
+    const UPDATED_AT = null;
+
     protected $fillable = [
         'user_id',
         'company_name',

@@ -11,6 +11,7 @@ class NonWorkingDays extends Model
 {
     use HasFactory;
     use HasUuids;
+    public $timestamps = false;
 
     protected $fillable = [
         'company_id',

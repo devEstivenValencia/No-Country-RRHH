@@ -12,6 +12,8 @@ class Employee extends Model
     use HasFactory;
     use HasUuids;
 
+    const UPDATED_AT = null;
+
     protected $fillable = [
         'user_id',
         'company_id',
