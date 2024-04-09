@@ -1,15 +1,12 @@
-import React, { ElementType, HTMLAttributes } from 'react'
+import { cn } from '#/lib/utils'
+import { HTMLAttributes } from 'react'
 
-interface TypographyComponentProps<T extends ElementType = 'span'> extends HTMLAttributes<HTMLElement> {
-	as?: T | ElementType
+interface Props extends HTMLAttributes<HTMLElement> {
+	as: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'span'
 }
 
-const TypographyComponent = <T extends ElementType = 'span'>({
-	as: Tag = 'span',
-	className,
-	...props
-}: TypographyComponentProps<T>) => {
-	const defaultFontSizes: Record<string, string> = {
+function Typography({ as: Tag, ...props }: Props) {
+	const defaultFontSizes = {
 		h1: 'text-5xl',
 		h2: 'text-4xl',
 		h3: 'text-3xl',
@@ -20,11 +17,7 @@ const TypographyComponent = <T extends ElementType = 'span'>({
 		span: 'text-base'
 	}
 
-	const defaultFontSize = defaultFontSizes[typeof Tag === 'string' ? Tag.toLowerCase() : ''] || ''
-
-	const combinedClassName = `${defaultFontSize} ${className || ''}`
-
-	return <Tag {...props} className={combinedClassName} />
+	return <Tag {...props} className={cn(defaultFontSizes[Tag], props.className)} />
 }
 
-export default TypographyComponent
+export default Typography
