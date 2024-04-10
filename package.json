@@ -7,8 +7,7 @@
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
-		"lint": "next lint",
-		"prepare": "husky"
+		"lint": "next lint"
 	},
 	"dependencies": {
 		"@radix-ui/react-label": "^2.0.2",
@@ -41,7 +40,7 @@
 		"@typescript-eslint/eslint-plugin": "^7.6.0",
 		"@typescript-eslint/parser": "^7.6.0",
 		"autoprefixer": "^10.4.19",
-		"eslint": "^9.0.0",
+		"eslint": "^8.5.7",
 		"eslint-config-next": "14.1.4",
 		"eslint-config-prettier": "^9.1.0",
 		"husky": "^9.0.11",
