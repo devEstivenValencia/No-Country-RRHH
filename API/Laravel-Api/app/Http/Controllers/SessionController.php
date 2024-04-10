@@ -4,14 +4,10 @@ namespace App\Http\Controllers;
 
 
 use App\Models\User;
-use App\Models\Company;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\SessionRequest;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 
 
 class SessionController extends Controller
