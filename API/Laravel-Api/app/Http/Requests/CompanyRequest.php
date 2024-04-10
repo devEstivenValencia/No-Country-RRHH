@@ -33,7 +33,7 @@ class CompanyRequest extends FormRequest
                 'string',
                 'min:8',
                 'confirmed',
-                'regex:/^(?=.?[A-Z])(?=.?[a-z])(?=.?[0-9])(?=.?[#?!@$%^&*-]).{8,}$/'
+                'regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/'
             ],
         ];
     }

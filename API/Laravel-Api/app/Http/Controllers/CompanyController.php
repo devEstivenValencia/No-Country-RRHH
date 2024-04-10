@@ -24,8 +24,8 @@ class CompanyController extends Controller
         $company->save();
 
         return response()->json(
-            ['token' => $user->createToken('token')->plainTextToken, 'user' => $user],
-            201
+            ['token' => $user->createToken('token')->plainTextToken,],
+            200
         );
     }
 }

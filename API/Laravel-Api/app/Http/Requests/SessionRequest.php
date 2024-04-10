@@ -31,7 +31,7 @@ class SessionRequest extends FormRequest
                 'required',
                 'string',
                 'min:8',
-                'regex:/^(?=.?[A-Z])(?=.?[a-z])(?=.?[0-9])(?=.?[#?!@$%^&*-]).{8,}$/'
+                'regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/'
             ],
         ];
     }
