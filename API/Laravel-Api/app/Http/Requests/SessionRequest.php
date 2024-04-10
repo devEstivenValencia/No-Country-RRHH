@@ -14,9 +14,7 @@ class SessionRequest extends FormRequest
         $encrypter = new Encrypter(base64_decode(Env('SECOND_KEY')), 'AES-256-CBC');
         $this->merge([
             'email' => $encrypter->decrypt($this->email),
-            'password' => $encrypter->decrypt($this->password),
-            'password_confirmation'
-            => $encrypter->decrypt($this->password_confirmation),
+            'password' => $encrypter->decrypt($this->password)
         ]);
     }
 
@@ -33,8 +31,7 @@ class SessionRequest extends FormRequest
                 'required',
                 'string',
                 'min:8',
-                'confirmed',
-                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/'
+                'regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/'
             ],
         ];
     }
@@ -48,7 +45,6 @@ class SessionRequest extends FormRequest
             'password.required' => 'El password es obligatorio',
             'password.min' => 'La contraseña debe tener al menos :min caracteres',
             'password.regex' => 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, un dígito, un carácter especial y tener una longitud mínima de 8 caracteres.',
-            'password.confirmed' => 'La confirmación de contraseña no coincide'
         ];
     }
 }
