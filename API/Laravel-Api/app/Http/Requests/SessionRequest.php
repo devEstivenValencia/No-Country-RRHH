@@ -26,12 +26,12 @@ class SessionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email',
             'password' => [
                 'required',
                 'string',
                 'min:8',
-                'regex:/^(?=.?[A-Z])(?=.?[a-z])(?=.?[0-9])(?=.?[#?!@$%^&*-]).{8,}$/'
+                'regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/'
             ],
         ];
     }
@@ -40,8 +40,6 @@ class SessionRequest extends FormRequest
         return [
             'email.required' => 'El email es obligatorio',
             'email.email' => 'El email ingresado no es un email válido',
-            'email.unique' => 'El email ya ha sido registrado',
-            'email.exists' => 'El email no está registrado',
             'password.required' => 'El password es obligatorio',
             'password.min' => 'La contraseña debe tener al menos :min caracteres',
             'password.regex' => 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, un dígito, un carácter especial y tener una longitud mínima de 8 caracteres.',
