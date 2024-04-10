@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\EncryptController;
 use App\Http\Controllers\SessionController;
 use Illuminate\Http\Request;
@@ -19,6 +20,8 @@ use Illuminate\Support\Facades\Route;
 Route::post('session/login', [SessionController::class, 'store']);
 Route::post('session/validate', [SessionController::class, 'validate_token'])->middleware('auth:sanctum');
 Route::delete('session/logout', [SessionController::class, 'destroy'])->middleware('auth:sanctum');
+
+Route::post('companies', [CompanyController::class, 'store']);
 
 Route::post('encrypt', [EncryptController::class, 'encrypt_data']);
 
