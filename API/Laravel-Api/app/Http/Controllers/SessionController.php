@@ -33,9 +33,21 @@ class SessionController extends Controller
         return response()->json('error');
     }
 
-    public function validate_token()
+    public function validate_token(Request $request)
     {
-        //
+        $tokenWithBearer = $request->header('Authorization');
+        $token = substr($tokenWithBearer, 7);
+        $data = $request->validate(
+            [
+                'session' => 'required'
+            ]
+        );
+        if ($data['session'] === $token) {
+            return response()->json(['success' => true], 200);
+        }
+        return response()->json([
+            'error' => 'SESSION_NOT_FOUND'
+        ], 404);
     }
 
     public function destroy(Request $request)
@@ -50,11 +62,12 @@ class SessionController extends Controller
         );
         if ($data['session'] === $token) {
             $user->tokens()->delete();
-            return response()->json(['success' => true], 200);
+            return response()->json([
+                'success' => true
+            ], 200);
         }
         return response()->json([
-            'error' => 'INVALID_TOKEN',
-            'user' => $user
+            'error' => 'INVALID_TOKEN'
         ], 404);
     }
 }
