@@ -5,3 +5,14 @@
 
 /* Solid Rounded */
 @import url('https://cdn-uicons.flaticon.com/2.2.0/uicons-solid-rounded/css/uicons-solid-rounded.css');
+
+/* Valores por defecto para los iconos de flaticon */
+i.fi {
+	display: flex;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-items: center;
+	width: 24px;
+	height: 24px;
+	font-size: 24px;
+}
