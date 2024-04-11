@@ -2,6 +2,7 @@
 
 namespace App\Classes;
 
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Encryption\Encrypter;
 
 class CustomEncrypter
@@ -25,13 +26,13 @@ class CustomEncrypter
 
         $dataDecrypted = [];
 
-        try {
-            foreach ($toDecrypt as $key => $value) {
+        foreach ($toDecrypt as $key => $value) {
+            try {
                 $dataDecrypted[$key] = $newEncrypter->decrypt($value);
+            } catch (DecryptException $e) {
+                $dataDecrypted[$key] = '';
             }
-            return $dataDecrypted;
-        } catch (\Throwable $th) {
-            return $dataDecrypted;
         }
+        return $dataDecrypted;
     }
 }
