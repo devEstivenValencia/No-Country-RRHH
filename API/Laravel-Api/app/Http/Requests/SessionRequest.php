@@ -2,20 +2,16 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Validation\Rule;
-use Illuminate\Encryption\Encrypter;
-use Illuminate\Support\Facades\Crypt;
+use App\Classes\CustomEncrypter;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SessionRequest extends FormRequest
 {
     protected function prepareForValidation()
     {
-        $encrypter = new Encrypter(base64_decode(Env('SECOND_KEY')), 'AES-256-CBC');
-        $this->merge([
-            'email' => $encrypter->decrypt($this->email),
-            'password' => $encrypter->decrypt($this->password)
-        ]);
+        $dataDecrypted = CustomEncrypter::decrypt($this->toArray());
+
+        $this->merge($dataDecrypted);
     }
 
     public function authorize(): bool
