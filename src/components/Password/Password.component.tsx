@@ -1,12 +1,13 @@
 'use client'
 
 import { Input, InputProps } from '#/components/ui/input'
-import { Label } from '#/components/ui/label'
 import { cn } from '#/lib/utils'
 import React, { createContext, useContext, useState } from 'react'
 import { minLength, regex, safeParse, string } from 'valibot'
 
+import Icon from '../Icon.component'
 import Typography from '../Typography.component'
+import { FormControl, FormLabel } from '../ui'
 import type { PasswordContextTypes, PasswordProps, PasswordValidations } from './Password.types'
 
 const defaultValidations: PasswordValidations = {
@@ -32,6 +33,7 @@ export function Password({ variant, ...props }: PasswordProps) {
 	}
 
 	function validateNewPassword(e: React.ChangeEvent<HTMLInputElement>) {
+		e.preventDefault()
 		const { target } = e
 		const { value } = target
 
@@ -52,9 +54,7 @@ export function Password({ variant, ...props }: PasswordProps) {
 	return (
 		<PasswordContext.Provider value={{ variant, shown, toggleShown, validations }}>
 			<div className='grid w-full max-w-sm items-center gap-1.5 relative'>
-				<Label htmlFor='password' className='font-bold'>
-					Contraseña
-				</Label>
+				<FormLabel htmlFor='password'>Contraseña</FormLabel>
 				<Password.Input {...props} onChange={onChange} />
 				<Typography as='span' className='text-neutro-800'>
 					Por favor, ingrese su contraseña.
@@ -66,22 +66,26 @@ export function Password({ variant, ...props }: PasswordProps) {
 }
 
 Password.Input = function PasswordInput({ onChange, ...props }: InputProps) {
-	const { shown, toggleShown } = useContext(PasswordContext)
+	const { shown, toggleShown, variant } = useContext(PasswordContext)
 
 	return (
-		<div className='relative w-auto h-fit'>
-			<Input
-				{...props}
-				type={shown ? 'text' : 'password'}
-				id='password'
-				placeholder='Contraseña'
-				onChange={onChange}
-				className='md:w-[448px]'
-			/>
-			<button type='button' onClick={toggleShown} className='absolute top-2 right-3'>
-				<i className={shown ? 'fi fi-sr-eye' : 'fi fi-sr-eye-crossed'} />
-			</button>
-		</div>
+		<FormControl>
+			<div className='relative w-auto h-fit'>
+				<Input
+					{...props}
+					type={shown ? 'text' : 'password'}
+					id='password'
+					placeholder='Contraseña'
+					onChange={onChange}
+					className='md:w-[448px]'
+					required
+					autoComplete={variant}
+				/>
+				<button type='button' onClick={toggleShown} className='absolute top-2 right-3'>
+					<Icon name={shown ? 'eye' : 'eye-crossed'} />
+				</button>
+			</div>
+		</FormControl>
 	)
 }
 
