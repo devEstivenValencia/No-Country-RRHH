@@ -1,11 +1,7 @@
-import { regex, safeParse, string } from 'valibot'
+import { regex, string } from 'valibot'
 
 export type Password = string
 
-const PasswordSchema = string([
+export const passwordSchema = string([
 	regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/, 'No cumple las validaciones')
 ])
-
-export function validatePassword(password: Password) {
-	return safeParse(PasswordSchema, password).success
-}
