@@ -77,7 +77,7 @@ export default function ProfileForm() {
 									<FormItem>
 										<FormLabel htmlFor='email'>Correo electrónico</FormLabel>
 										<FormControl>
-											<Input type='email' placeholder='Mi correo electrónico' {...field} required />
+											<Input type='email' placeholder='correo@ejemplo.com' {...field} required />
 										</FormControl>
 										<Typography as='span' className='text-neutro-800'>
 											Introduzca su dirección de correo electrónico
