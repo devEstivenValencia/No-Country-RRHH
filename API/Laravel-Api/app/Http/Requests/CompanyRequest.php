@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Encryption\Encrypter;
+use App\Classes\CustomEncrypter;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CompanyRequest extends FormRequest
@@ -10,13 +10,12 @@ class CompanyRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        $encrypter = new Encrypter(base64_decode(Env('SECOND_KEY')), 'AES-256-CBC');
-        $this->merge([
-            'email' => $encrypter->decrypt($this->email),
-            'password' => $encrypter->decrypt($this->password),
-            'password_confirmation'
-            => $encrypter->decrypt($this->password_confirmation),
-        ]);
+        $allowed = ['email', 'password', 'phone_number'];
+        $dataToDecrypt = array_intersect_key($this->toArray(), array_flip($allowed));
+
+        $dataDecrypted = CustomEncrypter::decrypt($dataToDecrypt);
+
+        $this->merge($dataDecrypted);
     }
 
     public function authorize(): bool
@@ -32,11 +31,13 @@ class CompanyRequest extends FormRequest
                 'required',
                 'string',
                 'min:8',
-                'confirmed',
                 'regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/'
             ],
+            'phone_number' => 'required',
+            'company_name' => 'required'
         ];
     }
+
     public function messages()
     {
         return [
@@ -47,7 +48,8 @@ class CompanyRequest extends FormRequest
             'password.required' => 'El password es obligatorio',
             'password.min' => 'La contraseña debe tener al menos :min caracteres',
             'password.regex' => 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, un dígito, un carácter especial y tener una longitud mínima de 8 caracteres.',
-            'password.confirmed' => 'La confirmación de contraseña no coincide'
+            'phone_number.required' => 'El número de contacto es obligatorio',
+            'company_name.required' => 'El nombre de la empresa es obligatorio'
         ];
     }
 }
