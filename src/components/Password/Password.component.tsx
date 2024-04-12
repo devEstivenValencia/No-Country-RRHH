@@ -53,7 +53,7 @@ export function Password({ variant, ...props }: PasswordProps) {
 
 	return (
 		<PasswordContext.Provider value={{ variant, shown, toggleShown, validations }}>
-			<div className='grid w-full max-w-sm items-center gap-1.5 relative'>
+			<div className='grid w-full items-center gap-1.5 relative'>
 				<FormLabel htmlFor='password'>Contraseña</FormLabel>
 				<Password.Input {...props} onChange={onChange} />
 				<Typography as='span' className='text-neutro-800'>
@@ -75,7 +75,7 @@ Password.Input = function PasswordInput({ onChange, ...props }: InputProps) {
 					{...props}
 					type={shown ? 'text' : 'password'}
 					id='password'
-					placeholder='Contraseña'
+					placeholder='Ejemplo123!'
 					onChange={onChange}
 					className='md:w-[448px]'
 					required
