@@ -21,7 +21,8 @@ Route::post('session/login', [SessionController::class, 'store']);
 Route::post('session/validate', [SessionController::class, 'validate_token'])->middleware('auth:sanctum');
 Route::delete('session/logout', [SessionController::class, 'destroy'])->middleware('auth:sanctum');
 
-Route::post('account/create', [CompanyController::class, 'store']);
+Route::post('account/enterprise/register', [CompanyController::class, 'store']);
+Route::put('account/enterprise/modify', [CompanyController::class, 'update'])->middleware('auth:sanctum');
 
 Route::post('encrypt', [EncryptController::class, 'encrypt_data']);
 

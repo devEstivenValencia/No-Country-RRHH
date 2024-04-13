@@ -34,6 +34,11 @@ class Company extends Model
         'contact' => 'array'
     ];
 
+    protected $hidden = [
+        'id',
+        'user_id',
+        'created_at'
+    ];
 
     public function user(): BelongsTo
     {
