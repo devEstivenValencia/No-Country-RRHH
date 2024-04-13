@@ -30,7 +30,9 @@ class SessionController extends Controller
                 200
             );
         }
-        return response()->json('error');
+        return response()->json([
+            'error' => 'UNAUTHORIZED'
+        ], 401);
     }
 
     public function validate_token(Request $request)
