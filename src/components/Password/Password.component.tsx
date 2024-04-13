@@ -56,7 +56,7 @@ export function Password({ variant, ...props }: PasswordProps) {
 			<div className='grid w-full items-center gap-1.5 relative'>
 				<FormLabel htmlFor='password'>Contraseña</FormLabel>
 				<Password.Input {...props} onChange={onChange} />
-				<Typography as='span' className='text-neutro-800'>
+				<Typography as='span' className='text-neutro-800  text-sm'>
 					Por favor, ingrese su contraseña.
 				</Typography>
 				{variant === 'new-password' && <Password.Validations />}
