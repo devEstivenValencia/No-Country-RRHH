@@ -51,8 +51,8 @@ export default function ProfileForm() {
 	}
 
 	return (
-		<section className='md:bg-primary-300 md:h-screen flex justify-center items-center h-screen'>
-			<div className='flex md:justify-center md:items-center md:shadow-md md:w-[1156px] md:h-[660px] md:rounded-3xl p-20 md:gap-10 bg-[#ffffff]'>
+		<section className='md:bg-primary-300 flex justify-center items-center h-screen'>
+			<div className='flex md:justify-center md:items-center md:shadow-md md:w-[1156px] md:h-[660px] md:rounded-3xl m:p-20 md:gap-10 bg-[#ffffff]'>
 				<Image
 					src='/images/login-image.png'
 					alt='Imagen Recursos'
@@ -77,10 +77,10 @@ export default function ProfileForm() {
 									<FormItem>
 										<FormLabel htmlFor='email'>Correo electrónico</FormLabel>
 										<FormControl>
-											<Input type='email' placeholder='correo@ejemplo.com' {...field} required />
+											<Input type='email' placeholder='ejemplo@gmail.com' {...field} required />
 										</FormControl>
-										<Typography as='span' className='text-neutro-800'>
-											Introduzca su dirección de correo electrónico
+										<Typography as='span' className='text-neutro-800 text-sm'>
+											Por favor, introduzca su dirección de correo electrónico
 										</Typography>
 									</FormItem>
 								</>
