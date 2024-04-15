@@ -7,6 +7,7 @@ import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage,
 import { APIROUTES } from '#/config/API.routes'
 import { APPROUTES } from '#/config/APP.routes'
 import { Password as PasswordEntity, passwordSchema } from '#/entities'
+import { emailSchema } from '#/schemas/email.schema'
 import { schemaIsValid } from '#/utils/schemaValidator.util'
 import axios from 'axios'
 import Image from 'next/image'
@@ -22,7 +23,7 @@ const defaultValues = {
 type LoginTypes = typeof defaultValues
 
 const loginSchema = v.object({
-	email: v.string([v.email()]),
+	email: emailSchema,
 	password: passwordSchema
 })
 
