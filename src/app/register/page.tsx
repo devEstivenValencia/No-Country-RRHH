@@ -31,7 +31,7 @@ const registerSchema = v.object({
 	checkbox: v.boolean()
 })
 
-export default function ProfileForm() {
+export default function RegisterPage() {
 	const form = useForm<RegisterValues>({
 		resolver: valibotResolver(registerSchema),
 		defaultValues
