@@ -1,7 +1,8 @@
 import { KeyWithValue } from '#/types/KeyWithValue.type'
 
-const APIURL = process.env.APIURL || 'https://test-laravel-api1.000webhostapp.com/api'
+const APIURL = process.env.NEXT_PUBLIC_APIURL
 
 export const APIROUTES: KeyWithValue<string> = {
-	LOGIN: `${APIURL}/session/login`
+	LOGIN: `${APIURL}/session/login`,
+	ENCRYPT: `${APIURL}/encrypt`
 } as const
