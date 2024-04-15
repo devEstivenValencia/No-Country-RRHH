@@ -4,51 +4,31 @@ import { Loader } from '#/components/Loader.component'
 import { Password } from '#/components/Password'
 import Typography from '#/components/Typography.component'
 import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '#/components/ui'
-import { APIROUTES } from '#/config/API.routes'
 import { APPROUTES } from '#/config/APP.routes'
-import { Password as PasswordEntity, passwordSchema } from '#/entities'
-import { emailSchema } from '#/schemas/email.schema'
-import { schemaIsValid } from '#/utils/schemaValidator.util'
-import axios from 'axios'
+import { Credentials, credentialsDefaultValues } from '#/entities/Credentials.entity'
+import { loginService } from '#/services/login.service'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
-import * as v from 'valibot'
 
-const defaultValues = {
-	email: '',
-	password: '' as PasswordEntity
-}
+export default function LoginPage() {
+	const router = useRouter()
 
-type LoginTypes = typeof defaultValues
-
-const loginSchema = v.object({
-	email: emailSchema,
-	password: passwordSchema
-})
-
-export default function ProfileForm() {
-	const form = useForm<LoginTypes>({
-		defaultValues
+	const form = useForm<Credentials>({
+		defaultValues: credentialsDefaultValues
 	})
 
 	const {
 		formState: { isSubmitting, errors },
-		handleSubmit,
-		setError
+		setError,
+		handleSubmit
 	} = form
 
-	async function onSubmit(credentials: LoginTypes) {
-		if (!schemaIsValid(loginSchema, credentials)) {
-			return setError('root.server', { message: 'Usuario o contraseña invalido' })
-		}
-
-		try {
-			const { data: res } = await axios.post(APIROUTES.LOGIN, credentials, { headers: { Accept: 'application/json' } })
-			console.log(res)
-		} catch (reason) {
-			console.error(reason)
-		}
+	async function onSubmit(credentials: Credentials) {
+		await loginService(credentials)
+			.then(res => router.push(APPROUTES.DASHBOARD))
+			.catch(({ message }) => setError('root.server', { message }))
 	}
 
 	return (
