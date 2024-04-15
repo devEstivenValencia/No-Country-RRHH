@@ -9,5 +9,6 @@ export async function encryptService<T>(values: T): Promise<T | undefined> {
 		return data
 	} catch (reason) {
 		console.error(reason)
+		throw reason
 	}
 }
