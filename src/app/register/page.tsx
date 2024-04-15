@@ -49,7 +49,7 @@ export default function ProfileForm() {
 							<Typography as='h2' className='text-secondary-500 font-bold'>
 								Bienvenido/a
 							</Typography>
-							<Typography as='span'>Registrese para continuar</Typography>
+							<Typography as='span'>Regístrese para continuar</Typography>
 						</div>
 						<FormField
 							control={form.control}
@@ -74,9 +74,9 @@ export default function ProfileForm() {
 							render={({ field }) => (
 								<>
 									<FormItem>
-										<FormLabel htmlFor='phone'>Número de contácto</FormLabel>
+										<FormLabel htmlFor='phone'>Número de contacto</FormLabel>
 										<FormControl>
-											<Input type='number' placeholder='+54 911 56854460' {...field} required />
+										<Input type='text' pattern='[0-9+]*' placeholder='+54 911 56854460' {...field} required />
 										</FormControl>
 										<Typography as='span' className='text-neutro-800  text-sm'>
 											Por favor, ingrese el número de contacto de la empresa.
