@@ -1,15 +1,15 @@
 'use client'
 
-import { Loader } from '#/components/Loader.component'
-import { Password } from '#/components/Password'
-import Typography from '#/components/Typography.component'
+import { Loader, Password, Typography } from '#/components'
 import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '#/components/ui'
 import { APPROUTES } from '#/config/APP.routes'
-import { Password as PasswordEntity, passwordSchema } from '#/entities'
-import { emailSchema } from '#/schemas/email.schema'
+import { NewEnterprise, Password as PasswordEntity, passwordSchema } from '#/entities'
+import { emailSchema } from '#/schemas'
+import { registerService } from '#/services'
 import { valibotResolver } from '@hookform/resolvers/valibot'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import * as v from 'valibot'
 
@@ -32,6 +32,8 @@ const registerSchema = v.object({
 })
 
 export default function RegisterPage() {
+	const router = useRouter()
+
 	const form = useForm<RegisterValues>({
 		resolver: valibotResolver(registerSchema),
 		defaultValues
@@ -44,7 +46,20 @@ export default function RegisterPage() {
 	} = form
 
 	async function onSubmit(values: RegisterValues) {
-		console.log(values)
+		const newEnterprise: NewEnterprise = {
+			companyName: values.companyName,
+			credentials: {
+				email: values.email,
+				password: values.password
+			},
+			contact: {
+				email: values.email,
+				phone: values.phone
+			}
+		}
+		await registerService(newEnterprise)
+			.then(() => router.push(APPROUTES.DASHBOARD))
+			.catch(({ message }) => console.log(message))
 	}
 
 	return (
