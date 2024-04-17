@@ -1,0 +1,5 @@
+export { default as Icon } from './Icon.component'
+export * from './Loader.component'
+export * from './Password'
+export { default as Typography } from './Typography.component'
+export * from './ui'
