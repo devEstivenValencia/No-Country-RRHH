@@ -6,11 +6,14 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Company extends Model
 {
     use HasFactory;
     use HasUuids;
+
+    const UPDATED_AT = null;
 
     protected $fillable = [
         'user_id',
@@ -31,9 +34,19 @@ class Company extends Model
         'contact' => 'array'
     ];
 
+    protected $hidden = [
+        'id',
+        'user_id',
+        'created_at'
+    ];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function nonWorkingDays(): HasMany
+    {
+        return $this->hasMany(NonWorkingDays::class);
     }
 }

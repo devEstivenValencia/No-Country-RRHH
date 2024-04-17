@@ -10,13 +10,13 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
     use HasUuids;
 
+    const UPDATED_AT = null;
     /**
      * The attributes that are mass assignable.
      *
@@ -49,7 +49,6 @@ class User extends Authenticatable implements JWTSubject
         'password' => 'hashed',
     ];
 
-<<<<<<< HEAD
     public function company(): HasOne
     {
         return $this->hasOne(Company::class);
@@ -57,16 +56,6 @@ class User extends Authenticatable implements JWTSubject
 
     public function employee(): HasOne
     {
-        return $this->hasOne(Employees::class);
-=======
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
-
-    public function getJWTCustomClaims()
-    {
-        return [];
->>>>>>> c21c1a5 (Commit de prueba)
+        return $this->hasOne(Employee::class);
     }
 }
