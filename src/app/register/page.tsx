@@ -40,9 +40,10 @@ export default function RegisterPage() {
 	})
 
 	const {
-		formState: { isSubmitting },
+		formState: { isSubmitting, errors },
 		handleSubmit,
-		setValue
+		setValue,
+		setError
 	} = form
 
 	async function onSubmit(values: RegisterValues) {
@@ -59,7 +60,7 @@ export default function RegisterPage() {
 		}
 		await registerService(newEnterprise)
 			.then(() => router.push(APPROUTES.DASHBOARD))
-			.catch(({ message }) => console.log(message))
+			.catch(({ message }) => setError('root.server', { message }))
 	}
 
 	return (
@@ -172,6 +173,8 @@ export default function RegisterPage() {
 								{isSubmitting ? <Loader /> : 'Registrarse'}
 							</Button>
 						</div>
+
+						{errors?.root?.server && <FormMessage>{errors?.root?.server.message}</FormMessage>}
 
 						<div className='py-2 flex flex-col'>
 							<Typography as='span' className='text-center font-bold'>
