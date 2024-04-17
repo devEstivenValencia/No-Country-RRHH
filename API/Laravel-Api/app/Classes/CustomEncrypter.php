@@ -10,6 +10,7 @@ class CustomEncrypter
 {
     static public function encrypt($toEncrypt)
     {
+
         $newEncrypter = new Encrypter(base64_decode(Env('SECOND_KEY')), 'AES-256-CBC');
 
         $data = [];
@@ -34,6 +35,7 @@ class CustomEncrypter
                 $dataDecrypted[$key] = '';
             }
         }
+
         return $dataDecrypted;
     }
 
