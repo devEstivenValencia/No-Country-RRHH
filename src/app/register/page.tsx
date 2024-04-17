@@ -1,15 +1,15 @@
 'use client'
 
-import { Loader } from '#/components/Loader.component'
-import { Password } from '#/components/Password'
-import Typography from '#/components/Typography.component'
+import { Loader, Password, Typography } from '#/components'
 import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '#/components/ui'
 import { APPROUTES } from '#/config/APP.routes'
-import { Password as PasswordEntity, passwordSchema } from '#/entities'
-import { emailSchema } from '#/schemas/email.schema'
+import { NewEnterprise, Password as PasswordEntity, passwordSchema } from '#/entities'
+import { emailSchema } from '#/schemas'
+import { registerService } from '#/services'
 import { valibotResolver } from '@hookform/resolvers/valibot'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import * as v from 'valibot'
 
@@ -31,20 +31,36 @@ const registerSchema = v.object({
 	checkbox: v.boolean()
 })
 
-export default function ProfileForm() {
+export default function RegisterPage() {
+	const router = useRouter()
+
 	const form = useForm<RegisterValues>({
 		resolver: valibotResolver(registerSchema),
 		defaultValues
 	})
 
 	const {
-		formState: { isSubmitting },
+		formState: { isSubmitting, errors },
 		handleSubmit,
-		setValue
+		setValue,
+		setError
 	} = form
 
 	async function onSubmit(values: RegisterValues) {
-		console.log(values)
+		const newEnterprise: NewEnterprise = {
+			companyName: values.companyName,
+			credentials: {
+				email: values.email,
+				password: values.password
+			},
+			contact: {
+				email: values.email,
+				phone: values.phone
+			}
+		}
+		await registerService(newEnterprise)
+			.then(() => router.push(APPROUTES.DASHBOARD))
+			.catch(({ message }) => setError('root.server', { message }))
 	}
 
 	return (
@@ -157,6 +173,8 @@ export default function ProfileForm() {
 								{isSubmitting ? <Loader /> : 'Registrarse'}
 							</Button>
 						</div>
+
+						{errors?.root?.server && <FormMessage>{errors?.root?.server.message}</FormMessage>}
 
 						<div className='py-2 flex flex-col'>
 							<Typography as='span' className='text-center font-bold'>
