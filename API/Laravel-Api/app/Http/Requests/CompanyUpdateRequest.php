@@ -3,13 +3,8 @@
 namespace App\Http\Requests;
 
 use App\Classes\CustomEncrypter;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Support\Arr;
-use Illuminate\Validation\ValidationException;
 
-class CompanyUpdateRequest extends FormRequest
+class CompanyUpdateRequest extends CustomFormRequest
 {
     protected function prepareForValidation()
     {
@@ -23,7 +18,7 @@ class CompanyUpdateRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->tokenCan('update-company');
     }
 
     public function rules(): array
@@ -46,7 +41,7 @@ class CompanyUpdateRequest extends FormRequest
             'company_name.required' => 'El nombre de la empresa es obligatorio'
         ];
     }
-
+    /* 
     protected function failedValidation(Validator $validator)
     {
         $errors = (new ValidationException($validator))->errors();
@@ -63,4 +58,9 @@ class CompanyUpdateRequest extends FormRequest
             ], 400)
         );
     }
+
+    public function failedAuthorization()
+    {
+        throw new CustomAuthorizationException();
+    } */
 }

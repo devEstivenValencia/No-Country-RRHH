@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -25,6 +26,16 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             //
+        });
+
+        $this->renderable(function (\Illuminate\Auth\AuthenticationException $e, $request) {
+            if ($e instanceof AuthenticationException) {
+                if ($request->is('api/*')) {
+                    return response()->json([
+                        'error' => 'UNAUTHENTICATED'
+                    ], 401);
+                }
+            }
         });
     }
 }

@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Classes\CustomEncrypter;
+use App\Classes\UserCapabilities;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\SessionRequest;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Hash;
 
 class SessionController extends Controller
 {
@@ -16,19 +18,39 @@ class SessionController extends Controller
     {
         $request->validated();
 
-        if (Auth::attempt($request->only(['email', 'password']))) {
-            $user = User::find(Auth::user()->id);
+        $user = User::where('email', $request->email)->first();
+
+        if ($user && Hash::check($request->password, $user->password)) {
 
             $user->tokens()->delete();
-            $token = $user->createToken('token', ['*'], Carbon::now()->addDays(7));
 
-            return response()->json(
-                [
-                    'session' => $token->plainTextToken,
-                    'user' => $user
-                ],
-                200
-            );
+            if ($company = $user->company()->first()) {
+                $token = $user->createToken('token', UserCapabilities::company(), Carbon::now()->addDays(7));
+
+                return response()->json(
+                    [
+                        'session' => $token->plainTextToken,
+                        'user' => array_merge(
+                            $user->toArray(),
+                            $company->toArray()
+                        )
+                    ],
+                    200
+                );
+            } elseif ($employee = $user->employee()->first()) {
+                $token = $user->createToken('token', UserCapabilities::employee(), Carbon::now()->addDays(7));
+
+                return response()->json(
+                    [
+                        'session' => $token->plainTextToken,
+                        'user' => array_merge(
+                            $user->toArray(),
+                            $employee->toArray()
+                        )
+                    ],
+                    200
+                );
+            }
         }
         return response()->json([
             'error' => 'UNAUTHORIZED'

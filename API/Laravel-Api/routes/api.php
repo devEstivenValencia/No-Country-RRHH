@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\Employee;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EncryptController;
 use App\Http\Controllers\SessionController;
 use Illuminate\Http\Request;
@@ -23,6 +25,9 @@ Route::delete('session/logout', [SessionController::class, 'destroy'])->middlewa
 
 Route::post('account/enterprise/register', [CompanyController::class, 'store']);
 Route::put('account/enterprise/modify', [CompanyController::class, 'update'])->middleware('auth:sanctum');
+
+Route::put('account/employee/register', [EmployeeController::class, 'store'])->middleware('auth:sanctum');
+Route::put('account/employee/modify', [EmployeeController::class, 'update'])->middleware('auth:sanctum');
 
 Route::post('encrypt', [EncryptController::class, 'encrypt_data']);
 

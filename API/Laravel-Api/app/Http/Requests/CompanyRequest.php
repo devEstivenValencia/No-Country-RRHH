@@ -3,13 +3,8 @@
 namespace App\Http\Requests;
 
 use App\Classes\CustomEncrypter;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Support\Arr;
-use Illuminate\Validation\ValidationException;
 
-class CompanyRequest extends FormRequest
+class CompanyRequest extends CustomFormRequest
 {
 
     protected function prepareForValidation()
@@ -62,22 +57,5 @@ class CompanyRequest extends FormRequest
 
             'company_name.required' => 'El nombre de la empresa es obligatorio'
         ];
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        $errors = (new ValidationException($validator))->errors();
-
-        $nested = [];
-        foreach ($errors as $key => $value) {
-            $nested = Arr::undot($errors, $key, $value);
-        }
-
-        throw new HttpResponseException(
-            response()->json([
-                'error' => "BAD_REQUEST",
-                'errors' => $nested
-            ], 400)
-        );
     }
 }

@@ -3,14 +3,14 @@
 namespace App\Http\Requests;
 
 use App\Classes\CustomEncrypter;
-use Illuminate\Foundation\Http\FormRequest;
 
-class SessionRequest extends FormRequest
+class SessionRequest extends CustomFormRequest
 {
     protected function prepareForValidation()
     {
-        $dataDecrypted = CustomEncrypter::decrypt($this->toArray());
-
+        $dataDecrypted = CustomEncrypter::decrypt($this->toArray());/* 
+        $dataDecrypted = CustomEncrypter::recurse(array(CustomEncrypter::class, 'decryptString'), $this->toArray());
+ */
         $this->merge($dataDecrypted);
     }
 
