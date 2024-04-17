@@ -14,12 +14,12 @@ export async function registerService(newEnterprise: NewEnterprise) {
 	const { credentials, contact } = newEnterprise
 
 	try {
-		const encryptCredentials = await encryptService(credentials)
-		const encryptContact = await encryptService(contact)
+		const encryptCredentials = await encryptService({ credentials })
+		const encryptContact = await encryptService({ contact })
 		const { data } = await axios.post(APIROUTES.REGISTER, {
 			company_name: newEnterprise.companyName,
-			credentials: encryptCredentials,
-			contact: encryptContact
+			credentials: encryptCredentials?.credentials,
+			contact: encryptContact?.contact
 		})
 		const { session, user } = data
 
