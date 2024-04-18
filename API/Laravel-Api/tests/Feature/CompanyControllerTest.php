@@ -30,13 +30,13 @@ class CompanyControllerTest extends TestCase
             ],
             'company_name' => 'Test Company'
         ]);
-
+        dd($encryptionResponse);
 
 
         // Extraes los datos encriptados de la respuesta
         $data = $encryptionResponse->json();
-            // Enviamos una solicitud para crear una compañía
-        ;
+        // Enviamos una solicitud para crear una compañía
+
         $response = $this->postJson('/api/account/enterprise/register', [
             'credentials' => $data['credentials'],
             'contact' => $data['contact'],
@@ -80,15 +80,15 @@ class CompanyControllerTest extends TestCase
 
         // Extraes los datos encriptados de la respuesta
         $data = $encryptionResponse->json();
-            // Enviamos una solicitud para crear una compañía
-        ;
+        // Enviamos una solicitud para crear una compañía
+
         $response = $this->postJson('/api/account/enterprise/register', [
             'credentials' => $data['credentials'],
             'contact' => $data['contact'],
             'company_name' => 'Test Company'
         ]);
 
-        dd($response);
+
 
         // Enviamos una solicitud para actualizar la compañía
         $response = $this->putJson('/api/account/enterprise/modify', [
