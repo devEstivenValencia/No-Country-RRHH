@@ -29,6 +29,8 @@ Route::put('account/enterprise/modify', [CompanyController::class, 'update'])->m
 Route::put('account/employee/register', [EmployeeController::class, 'store'])->middleware('auth:sanctum');
 Route::put('account/employee/modify', [EmployeeController::class, 'update'])->middleware('auth:sanctum');
 
+Route::post('account/employee/register', [EmployeeController::class, 'store'])->middleware('auth:sanctum');
+
 Route::post('encrypt', [EncryptController::class, 'encrypt_data']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
