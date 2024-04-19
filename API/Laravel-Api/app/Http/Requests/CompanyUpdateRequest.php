@@ -8,10 +8,23 @@ class CompanyUpdateRequest extends CustomFormRequest
 {
     protected function prepareForValidation()
     {
-        $allowed = ['contact'];
+        /* $allowed = ['contact'];
         $dataToDecrypt = array_intersect_key($this->toArray(), array_flip($allowed));
 
-        $dataDecrypted = CustomEncrypter::decrypt($dataToDecrypt);
+        $dataDecrypted = CustomEncrypter::decrypt($dataToDecrypt); */
+
+        $keyToDecrypt = [
+            'contact' => [
+                'email',
+                'phone'
+            ]
+        ];
+
+        $dataDecrypted = CustomEncrypter::recurseSpecificSchema(
+            array(CustomEncrypter::class, 'decryptString'),
+            $this->toArray(),
+            $keyToDecrypt
+        );
 
         $this->merge($dataDecrypted);
     }
@@ -41,26 +54,4 @@ class CompanyUpdateRequest extends CustomFormRequest
             'company_name.required' => 'El nombre de la empresa es obligatorio'
         ];
     }
-    /* 
-    protected function failedValidation(Validator $validator)
-    {
-        $errors = (new ValidationException($validator))->errors();
-
-        $nested = [];
-        foreach ($errors as $key => $value) {
-            $nested = Arr::undot($errors, $key, $value);
-        }
-
-        throw new HttpResponseException(
-            response()->json([
-                'error' => "BAD_REQUEST",
-                'errors' => $nested
-            ], 400)
-        );
-    }
-
-    public function failedAuthorization()
-    {
-        throw new CustomAuthorizationException();
-    } */
 }

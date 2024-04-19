@@ -8,7 +8,7 @@ class EmployeeUpdateRequest extends CustomFormRequest
 {
     protected function prepareForValidation(): void
     {
-        $allowed = ['credentials', 'contact', 'id_legal', 'address', 'contact'];
+        $allowed = ['company_id', 'credentials', 'contact', 'id_legal', 'address', 'contact'];
         $dataToDecrypt = array_intersect_key($this->toArray(), array_flip($allowed));
 
         $dataDecrypted = CustomEncrypter::decrypt($dataToDecrypt);

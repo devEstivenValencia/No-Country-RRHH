@@ -11,7 +11,7 @@ class EncryptController extends Controller
     {
         try {
             $data = CustomEncrypter::recurse(array(CustomEncrypter::class, 'encryptString'), $request->toArray());
-            // $data = CustomEncrypter::decrypt($request->toArray());
+            /* $data = CustomEncrypter::encrypt($request->toArray()); */
             return response()->json($data, 200);
         } catch (\Throwable $th) {
             return response()->json(['error' => 'INVALID_INPUT'], 400);
