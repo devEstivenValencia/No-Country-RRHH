@@ -18,6 +18,7 @@ class CompanyController extends Controller
     public function store(CompanyRequest $request)
     {
         $data = $request->validated();
+
         $user = User::create(['email' => $data['credentials']['email'], 'password' => Hash::make($data['credentials']['password']), 'disabled' => false]);
 
         $company = new Company();
@@ -28,6 +29,7 @@ class CompanyController extends Controller
             'phone_number' => $data['contact']['phone'],
             'email' => $data['contact']['email']
         ];
+
         $company->save();
 
         return response()->json(
@@ -59,7 +61,7 @@ class CompanyController extends Controller
                 )
             ],
             201
-        ); 
+        );
         //end*/
     }
     public function update(CompanyUpdateRequest $request)
