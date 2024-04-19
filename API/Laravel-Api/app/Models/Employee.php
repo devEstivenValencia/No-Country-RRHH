@@ -20,7 +20,7 @@ class Employee extends Model
         'user_id',
         'company_id',
         'name',
-        'id_legal',
+        'dni',
         'employee_code',
         'address',
         'contact',

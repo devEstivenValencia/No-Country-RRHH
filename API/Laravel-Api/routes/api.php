@@ -26,8 +26,8 @@ Route::delete('session/logout', [SessionController::class, 'destroy'])->middlewa
 Route::post('account/enterprise/register', [CompanyController::class, 'store']);
 Route::put('account/enterprise/modify', [CompanyController::class, 'update'])->middleware('auth:sanctum');
 
-Route::put('account/employee/register', [EmployeeController::class, 'store'])->middleware('auth:sanctum');
-Route::put('account/employee/modify', [EmployeeController::class, 'update'])->middleware('auth:sanctum');
+Route::put('enterprise/employee/create', [EmployeeController::class, 'store'])->middleware('auth:sanctum');
+Route::put('enterprise/employee/modify', [EmployeeController::class, 'update'])->middleware('auth:sanctum');
 
 
 

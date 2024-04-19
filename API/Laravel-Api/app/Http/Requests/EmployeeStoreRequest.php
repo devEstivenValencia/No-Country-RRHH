@@ -8,7 +8,7 @@ class EmployeeStoreRequest extends CustomFormRequest
 {
     protected function prepareForValidation(): void
     {
-        $allowed = ['credentials', 'contact', 'id_legal', 'address', 'contact'];
+        $allowed = ['credentials', 'contact', 'dni', 'address', 'contact', 'company_id'];
         $dataToDecrypt = array_intersect_key($this->toArray(), array_flip($allowed));
 
         $dataDecrypted = CustomEncrypter::decrypt($dataToDecrypt);
