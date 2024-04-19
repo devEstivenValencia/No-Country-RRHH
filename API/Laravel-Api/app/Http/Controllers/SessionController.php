@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Classes\CustomEncrypter;
 use App\Classes\UserCapabilities;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\SessionRequest;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 
 class SessionController extends Controller

@@ -7,10 +7,10 @@ use App\Classes\CustomEncrypter;
 class SessionRequest extends CustomFormRequest
 {
     protected function prepareForValidation()
-    {
-        $dataDecrypted = CustomEncrypter::decrypt($this->toArray());/* 
+    {/* 
+        $dataDecrypted = CustomEncrypter::decrypt($this->toArray()); */
         $dataDecrypted = CustomEncrypter::recurse(array(CustomEncrypter::class, 'decryptString'), $this->toArray());
- */
+
         $this->merge($dataDecrypted);
     }
 

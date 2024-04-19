@@ -3,17 +3,44 @@
 namespace App\Http\Requests;
 
 use App\Classes\CustomEncrypter;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CompanyRequest extends CustomFormRequest
 {
 
     protected function prepareForValidation()
-    {
+    {/* 
         $allowed = ['credentials', 'contact'];
         $dataToDecrypt = array_intersect_key($this->toArray(), array_flip($allowed));
 
-        $dataDecrypted = CustomEncrypter::decrypt($dataToDecrypt);
+        $dataDecrypted = CustomEncrypter::decrypt($dataToDecrypt); */
 
+        $keyToDecrypt = [
+            'credentials' => [
+                'email',
+                'password'
+            ],
+            'contact' => [
+                'email',
+                'phone'
+            ]
+        ];
+
+        $dataDecrypted = CustomEncrypter::recurseSpecificSchema(
+            array(CustomEncrypter::class, 'decryptString'),
+            $this->toArray(),
+            $keyToDecrypt
+        );
+
+        //new
+        /* $sharedKey = base64_decode(Env('SECOND_KEY'));
+
+        $dataDecrypted = CustomEncrypter::recurseSpecificSchemaOpenSSL(
+            $this->toArray(),
+            $keyToDecrypt,
+            $sharedKey
+        ); */
+        //end new
         $this->merge($dataDecrypted);
     }
 
