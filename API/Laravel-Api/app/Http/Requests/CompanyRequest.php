@@ -60,8 +60,8 @@ class CompanyRequest extends CustomFormRequest
                 'regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/'
             ],
             'contact.email' => 'required|email',
-            'contact.phone' => 'required',
-            'company_name' => 'required'
+            'contact.phone' => 'required|string',
+            'company_name' => 'required|string'
         ];
     }
 
@@ -81,8 +81,10 @@ class CompanyRequest extends CustomFormRequest
             'contact.email.email' => 'El email de contacto ingresado no es un email válido',
 
             'contact.phone.required' => 'El número de contacto es obligatorio',
+            'contact.phone.string' => 'El número de contacto debe ser texto',
 
-            'company_name.required' => 'El nombre de la empresa es obligatorio'
+            'company_name.required' => 'El nombre de la empresa es obligatorio',
+            'company_name.string' => 'El nombre de la empresa debe ser texto'
         ];
     }
 }

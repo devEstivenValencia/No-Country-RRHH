@@ -18,7 +18,7 @@ class EmployeeStoreRequest extends CustomFormRequest
 
     public function authorize(): bool
     {
-        return $this->user->tokenCan('create_employee');
+        return $this->user()->tokenCan('create-employee');
     }
 
     public function rules(): array
