@@ -13,7 +13,7 @@ class CompanyRequest extends CustomFormRequest
         $dataToDecrypt = array_intersect_key($this->toArray(), array_flip($allowed));
 
         $dataDecrypted = CustomEncrypter::decrypt($dataToDecrypt);
-
+        dd($dataDecrypted);
         $this->merge($dataDecrypted);
     }
 

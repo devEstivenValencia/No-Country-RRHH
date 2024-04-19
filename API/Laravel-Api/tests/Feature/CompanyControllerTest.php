@@ -21,16 +21,16 @@ class CompanyControllerTest extends TestCase
         $encryptionResponse = $this->postJson('/api/encrypt', [
             'credentials' =>
             [
-                'email' => 'test@example.com',
+                'email' => 'test1@example.com',
                 'password' => '12Jhasass85@'
             ],
             'contact' => [
-                'email' => 'test@example.com',
+                'email' => 'test1@example.com',
                 'phone' => '123456789'
             ],
             'company_name' => 'Test Company'
         ]);
-        dd($encryptionResponse);
+
 
 
         // Extraes los datos encriptados de la respuesta
@@ -42,7 +42,7 @@ class CompanyControllerTest extends TestCase
             'contact' => $data['contact'],
             'company_name' => 'Test Company'
         ]);
-
+        dd($response);
         // Verificamos el estado de la respuesta y el contenido
         $response->assertStatus(201)
             ->assertJsonStructure([
