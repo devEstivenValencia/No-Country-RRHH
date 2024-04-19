@@ -97,6 +97,7 @@ class CustomEncrypter
 
     static public function decryptString($toEncrypt)
     {
+
         $newEncrypter = new Encrypter(base64_decode(Env('SECOND_KEY')), 'AES-256-CBC');
 
         $dataDecrypted = '';

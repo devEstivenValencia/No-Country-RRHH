@@ -13,7 +13,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CompanyControllerTest extends TestCase
 {
-    use RefreshDatabase;
+    // use RefreshDatabase;
 
     /** @test */
     public function a_company_can_be_created()
@@ -21,14 +21,14 @@ class CompanyControllerTest extends TestCase
         $encryptionResponse = $this->postJson('/api/encrypt', [
             'credentials' =>
             [
-                'email' => 'test1@example.com',
+                'email' => 'test12@example.com',
                 'password' => '12Jhasass85@'
             ],
             'contact' => [
-                'email' => 'test1@example.com',
+                'email' => 'test12@example.com',
                 'phone' => '123456789'
-            ],
-            'company_name' => 'Test Company'
+            ]
+
         ]);
 
 
@@ -36,13 +36,10 @@ class CompanyControllerTest extends TestCase
         // Extraes los datos encriptados de la respuesta
         $data = $encryptionResponse->json();
         // Enviamos una solicitud para crear una compañía
+        $arrayMerge = array_merge($data, ['company_name' => 'Test Comany']);
+        $response = $this->postJson('/api/account/enterprise/register', $arrayMerge);
 
-        $response = $this->postJson('/api/account/enterprise/register', [
-            'credentials' => $data['credentials'],
-            'contact' => $data['contact'],
-            'company_name' => 'Test Company'
-        ]);
-        dd($response);
+
         // Verificamos el estado de la respuesta y el contenido
         $response->assertStatus(201)
             ->assertJsonStructure([
@@ -57,52 +54,81 @@ class CompanyControllerTest extends TestCase
                     ]
                 ]
             ]);
-    }
 
+        $token = $response['session'];
+        $encryptionResponseUpdate = $this->postJson('/api/encrypt', [
 
-    /** @test */
-    public function a_company_can_be_updated()
-    {
-        $encryptionResponse = $this->postJson('/api/encrypt', [
-            'credentials' =>
-            [
-                'email' => 'test@example.com',
-                'password' => '12Jhasass85@'
-            ],
             'contact' => [
-                'email' => 'test@example.com',
-                'phone' => '123456789'
-            ],
-            'company_name' => 'Test Company'
-        ]);
-
-
-
-        // Extraes los datos encriptados de la respuesta
-        $data = $encryptionResponse->json();
-        // Enviamos una solicitud para crear una compañía
-
-        $response = $this->postJson('/api/account/enterprise/register', [
-            'credentials' => $data['credentials'],
-            'contact' => $data['contact'],
-            'company_name' => 'Test Company'
-        ]);
-
-
-
-        // Enviamos una solicitud para actualizar la compañía
-        $response = $this->putJson('/api/account/enterprise/modify', [
-            'company_name' => 'Updated Company',
-            'contact' => [
-                'email' => 'updated@example.com',
-                'phone_number' => '987654321'
+                'email' => 'testUpdate@example.com',
+                'phone' => '989844566'
             ]
+
         ]);
 
-        // Verificamos el estado de la respuesta y el contenido
-        $response->assertStatus(200)
+        $dataUpdate = $encryptionResponseUpdate->json();
+        $arrayMergeUpdate = array_merge($dataUpdate, ['company_name' => 'Test Comany update']);
+
+        $responseUpdate = $this->withHeaders(['Authorization' => 'Bearer ' . $token])->putJson('/api/account/enterprise/modify', $arrayMergeUpdate);
+
+        $responseUpdate->assertStatus(200)
             ->assertJson([
-                'success' => true
+                'success' => true,
+
             ]);
     }
+
+
+    // /** @test */
+    // public function a_company_can_be_updated()
+    // {
+    //     // Create a user
+    //     $user = User::factory()->create([
+    //         'email' => 'test2@example.com',
+    //         'password' => Hash::make('12Jhasass85@')
+    //     ]);
+    //
+    //     // Generate Sanctum token for the user
+    //     $token = $user->createToken('Test Token')->plainTextToken;
+
+
+    //     $encryptionResponse = $this->postJson('/api/encrypt', [
+    //         'credentials' =>
+    //         [
+    //             'email' => 'test23@example.com',
+    //             'password' => '12Jhasass85@'
+    //         ],
+    //         'contact' => [
+    //             'email' => 'test23@example.com',
+    //             'phone' => '123456789'
+    //         ]
+    //     ]);
+
+
+
+    //     // Extraes los datos encriptados de la respuesta
+    //     $data = $encryptionResponse->json();
+    //     // Enviamos una solicitud para crear una compañía
+    //     $arrayMerge = array_merge($data, ['company_name' => 'Test2 Comany']);
+    //     $response = $this->postJson('/api/account/enterprise/register', $arrayMerge);
+
+
+
+    //     // Enviamos una solicitud para actualizar la compañía
+    //     $responseUpdate = $this->withHeaders(['Authorization' => 'Bearer ' . $token])->putJson('/api/account/enterprise/modify', [
+    //         'user_id' => $response['user']['id'],
+    //         'company_name' => 'Updated Company',
+    //         'contact' => [
+    //             'email' => 'test345@example.com',
+    //             'phone_number' => '987654321'
+    //         ]
+    //     ]);
+
+    //
+
+    //     // Verificamos el estado de la respuesta y el contenido
+    //     $responseUpdate->assertStatus(200)
+    //         ->assertJson([
+    //             'success' => true
+    //         ]);
+    // }
 }
