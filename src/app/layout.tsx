@@ -16,7 +16,7 @@ export default function RootLayout({
 	return (
 		<html lang='es'>
 			<head>
-				<meta httpEquiv='Content-Security-Policy' content='downgrade-insecure-requests' />
+				<meta httpEquiv='Content-Security-Policy' content='upgrade-insecure-requests' />
 			</head>
 			<body>{children}</body>
 		</html>

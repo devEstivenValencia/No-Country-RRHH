@@ -13,7 +13,7 @@ export async function loginService(credentials: Credentials) {
 
 	try {
 		const encryptCredentials = await encryptService(credentials)
-		const { data } = await axios.post(APIROUTES.LOGIN, encryptCredentials)
+		const { data } = await axios.post(APIROUTES.SESSION.LOGIN, encryptCredentials)
 		const { session, user } = data
 
 		Cookies.set('session', session)

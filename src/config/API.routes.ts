@@ -2,8 +2,11 @@ import { KeyWithValue } from '#/types/KeyWithValue.type'
 
 const APIURL = process.env.NEXT_PUBLIC_APIURL
 
-export const APIROUTES: KeyWithValue<string> = {
-	LOGIN: `${APIURL}/session/login`,
+export const APIROUTES: KeyWithValue<any> = {
+	SESSION: {
+		LOGIN: `${APIURL}/session/login`,
+		VALIDATE: `${APIURL}/session/validate`
+	},
 	REGISTER: `${APIURL}/account/enterprise/register`,
 	ENCRYPT: `${APIURL}/encrypt`
 } as const
