@@ -3,17 +3,44 @@
 namespace App\Http\Requests;
 
 use App\Classes\CustomEncrypter;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CompanyRequest extends CustomFormRequest
 {
 
     protected function prepareForValidation()
-    {
+    {/*
         $allowed = ['credentials', 'contact'];
         $dataToDecrypt = array_intersect_key($this->toArray(), array_flip($allowed));
 
-        $dataDecrypted = CustomEncrypter::decrypt($dataToDecrypt);
+        $dataDecrypted = CustomEncrypter::decrypt($dataToDecrypt); */
 
+        $keyToDecrypt = [
+            'credentials' => [
+                'email',
+                'password'
+            ],
+            'contact' => [
+                'email',
+                'phone'
+            ]
+        ];
+
+        $dataDecrypted = CustomEncrypter::recurseSpecificSchema(
+            array(CustomEncrypter::class, 'decryptString'),
+            $this->toArray(),
+            $keyToDecrypt
+        );
+
+        //new
+        /* $sharedKey = base64_decode(Env('SECOND_KEY'));
+
+        $dataDecrypted = CustomEncrypter::recurseSpecificSchemaOpenSSL(
+            $this->toArray(),
+            $keyToDecrypt,
+            $sharedKey
+        ); */
+        //end new
         $this->merge($dataDecrypted);
     }
 
@@ -33,8 +60,8 @@ class CompanyRequest extends CustomFormRequest
                 'regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/'
             ],
             'contact.email' => 'required|email',
-            'contact.phone' => 'required',
-            'company_name' => 'required'
+            'contact.phone' => 'required|string',
+            'company_name' => 'required|string'
         ];
     }
 
@@ -54,8 +81,10 @@ class CompanyRequest extends CustomFormRequest
             'contact.email.email' => 'El email de contacto ingresado no es un email válido',
 
             'contact.phone.required' => 'El número de contacto es obligatorio',
+            'contact.phone.string' => 'El número de contacto debe ser texto',
 
-            'company_name.required' => 'El nombre de la empresa es obligatorio'
+            'company_name.required' => 'El nombre de la empresa es obligatorio',
+            'company_name.string' => 'El nombre de la empresa debe ser texto'
         ];
     }
 }

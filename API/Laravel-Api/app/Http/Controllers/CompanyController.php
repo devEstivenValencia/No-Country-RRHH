@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\CustomEncrypter;
 use App\Classes\UserCapabilities;
 use App\Http\Requests\CompanyRequest;
 use App\Http\Requests\CompanyUpdateRequest;
@@ -9,7 +10,6 @@ use App\Models\User;
 use App\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
@@ -18,6 +18,7 @@ class CompanyController extends Controller
     public function store(CompanyRequest $request)
     {
         $data = $request->validated();
+
         $user = User::create(['email' => $data['credentials']['email'], 'password' => Hash::make($data['credentials']['password']), 'disabled' => false]);
 
         $company = new Company();
@@ -28,6 +29,7 @@ class CompanyController extends Controller
             'phone_number' => $data['contact']['phone'],
             'email' => $data['contact']['email']
         ];
+
         $company->save();
 
         return response()->json(
@@ -40,6 +42,27 @@ class CompanyController extends Controller
             ],
             201
         );
+
+        /*
+        //new
+        $sharedKey = base64_decode(Env('SECOND_KEY'));
+        return response()->json(
+            [
+                'session' => $user->createToken('token', UserCapabilities::company(), Carbon::now()->addDays(7))->plainTextToken,
+                'user' => array_merge(
+                    $user->toArray(),
+                    $company->toArray(),
+                    [
+                        'contact' => [
+                            'email' => CustomEncrypter::encryptOpenSSL($company->contact['email'], $sharedKey),
+                            'phone_number' => CustomEncrypter::encryptOpenSSL($company->contact['phone_number'], $sharedKey),
+                        ]
+                    ]
+                )
+            ],
+            201
+        );
+        //end*/
     }
     public function update(CompanyUpdateRequest $request)
     {

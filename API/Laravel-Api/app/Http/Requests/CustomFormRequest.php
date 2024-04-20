@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Classes\CustomAuthorizationException;
+use App\Exceptions\CustomAuthorizationException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
