@@ -13,8 +13,22 @@ class EmployeeController extends Controller
 {
     public function store(EmployeeStoreRequest $request): JsonResponse
     {
+        $userId = Auth::id();
         $data = $request->validated();
 
+        $employee = new Employee();
+        $employee->user_id = $userId;
+        $employee->company_id = $data['company_id'];
+        $employee->name = $data['employee']['name'];
+        $employee->dni = $data['employee']['dni'];
+        $employee->address['country'] = $data['employee']['address']['country'];
+        $employee->address['province'] = $data['employee']['address']['province'];
+        $employee->address['province'] = $data['employee']['address']['city'];
+        $employee->address['address'] = $data['employee']['address']['address'];
+        $employee->address['zipcode'] = $data['employee']['address']['zipcode'];
+        $employee->contact['email'] = $data['employee']['contact']['email'];
+        $employee->contact['phone'] = $data['employee']['contact']['phone'];
+        $employee->contact['email'] = $data['employee']['contact']['email'];
         return response()->json(['message' => 'empleado creado'], 200);
     }
 

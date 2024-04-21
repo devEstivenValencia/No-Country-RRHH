@@ -8,10 +8,32 @@ class EmployeeStoreRequest extends CustomFormRequest
 {
     protected function prepareForValidation(): void
     {
-        $allowed = ['credentials', 'contact', 'dni', 'address', 'contact', 'company_id'];
-        $dataToDecrypt = array_intersect_key($this->toArray(), array_flip($allowed));
-
-        $dataDecrypted = CustomEncrypter::decrypt($dataToDecrypt);
+        $keyToDecrypt = [
+            'company_id',
+            'employee' => [
+                'employee_id',
+                'dni',
+                'address' => [
+                    'country',
+                    'province',
+                    'city',
+                    'address',
+                    'zipcode',
+                ],
+                'contact' => [
+                    'email',
+                    'phone'
+                ],
+                'credentials' => [
+                    'email', 'password'
+                ]
+            ]
+        ];
+        $dataDecrypted = CustomEncrypter::recurseSpecificSchema(
+            array(CustomEncrypter::class, 'decryptString'),
+            $this->toArray(),
+            $keyToDecrypt
+        );
 
         $this->merge($dataDecrypted);
     }
@@ -23,19 +45,52 @@ class EmployeeStoreRequest extends CustomFormRequest
 
     public function rules(): array
     {
-        return [
-            'name.required' => 'El nombre del empleado es obligatorio',
-            'id_legal.required' => 'El id legal del empleado es obligatorio',
-            'employee_code.required' => 'El código del empleado es obligatorio',
-            'address.required' => 'La dirección del empleado es obligatorio',
+        return
+            [
+                'company_id' => 'required|string',
 
-            'contact.email.required' => 'El email de contacto es obligatorio',
-            'contact.email.email' => 'El email de contacto ingresado no es un email válido',
+                'employee.employee_id' => 'required|string',
+                'employee.name' => 'string|nullable',
+                'employee.dni' => 'string|nullable',
+
+                'employee.address.country' => 'string|nullable',
+                'employee.address.province' => 'string|nullable',
+                'employee.address.city' => 'string|nullable',
+                'employee.address.address' => 'string|nullable',
+                'employee.address.zipcode' => 'string|nullable',
+
+                'employee.contact.email' => 'email|nullable',
+                'employee.contact.phone' => 'string|nullable',
+
+                'employee.admission_date' => 'required|date',
+                'employee.role' => 'required|string'
+            ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'company_id.required' => 'El id de la companía es obligatorio',
+
+            'employee.employee_id.required' => 'El id del empleado es obligatorio',
+            'employee.employee_id.string' => 'El id del empleado debe ser texto',
+            'employee.name.required' => 'El nombre del empleado es obligatorio',
+            'employee.dni.string' => 'El dni del empleado debe ser texto',
+
+            'employee.address.country.string' => 'El país del empleado debe ser texto',
+            'employee.address.province.string' => 'La provincia del empleado debe ser texto',
+            'employee.address.address.string' => 'La dirección del empleado debe ser texto',
+            'employee.address.zipcode.string' => 'El codigo postal del empleado debe ser texto',
+
+            'employee.contact.email.email' => 'El email de contacto ingresado no es un email válido',
+            'employee.contact.phone.email' => 'El teléfono del empleado debe ser texto',
 
             'contact.phone.required' => 'El número de contacto es obligatorio',
 
-            'state.required' => 'El estado es obligatorio',
-            'role.required' => 'El rol del empleado es obligatorio',
+            'employee.admission_date.required' => 'La fecha de contratación del empleado es obligatorio',
+            'employee.admission_date.date' => 'La fecha de contratación del empleado debe ser una fecha válida',
+            'employee.role.required' => 'El rol del empleado es obligatorio',
+            'employee.role.string' => 'El rol del empleado debe ser texto',
         ];
     }
 }
