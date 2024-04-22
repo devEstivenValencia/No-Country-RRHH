@@ -38,27 +38,7 @@ class EmployeeController extends Controller
         $employee->contact = $data['employee']['contact'];
         $employee->admission_date = $data['employee']['admission_date'];
         $employee->role = $data['employee']['role'];
-        // $employee->address = [
-        //     'country' => $data['employee']['address']['country'], 'province' => $data['employee']['address']['province'],
-        //     'city' => $data['employee']['address']['city'],
-        //     'address' => $data['employee']['address']['address'],
-        //     'zipcode' => $data['employee']['address']['zipcode'],
-        // ];
-        // $employee->contact = ['email' => $data['employee']['contact']['email'], 'phone' => $data['employee']['contact']['phone']];
 
-
-
-        // $employee->address['country'] = $data['employee']['address']['country'];
-        // $employee->address['province'] = $data['employee']['address']['province'];
-        // $employee->address['province'] = $data['employee']['address']['city'];
-        // $employee->address['address'] = $data['employee']['address']['address'];
-        // $employee->address['zipcode'] = $data['employee']['address']['zipcode'];
-
-
-        // $employee->contact['email'] = $data['employee']['contact']['email'];
-        // $employee->contact['phone'] = $data['employee']['contact']['phone'];
-        // $employee->credentials['email'] = $data['employee']['credentials']['email'];
-        // $employee->credentials['password'] = $data['employee']['credentials']['password'];
 
         $employee->save();
         return response()->json(['success' => true], 200);
