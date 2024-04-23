@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('id_legal')->nullable();
             $table->string('employee_code')->nullable();
-            $table->text('address')->nullable();
+            $table->json('address')->nullable();
             $table->json('contact')->nullable();
             $table->date('admission_date')->nullable();
             $table->date('finish_date')->nullable();

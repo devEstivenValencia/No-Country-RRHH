@@ -32,7 +32,7 @@ class Employee extends Model
 
     protected $casts = [
         'id_legal' => 'encrypted',
-        'address' => 'encrypted',
+        'address' => 'array',
         'contact' => 'array',
         'role' => 'array'
     ];
@@ -49,6 +49,14 @@ class Employee extends Model
     }
 
     protected function contact(): Attribute
+    {
+        return new Attribute(
+            get: fn ($value) => CustomEncrypter::decryptDB($value),
+            set: fn ($value) => json_encode(CustomEncrypter::encryptDB($value))
+        );
+    }
+
+    protected function address(): Attribute
     {
         return new Attribute(
             get: fn ($value) => CustomEncrypter::decryptDB($value),

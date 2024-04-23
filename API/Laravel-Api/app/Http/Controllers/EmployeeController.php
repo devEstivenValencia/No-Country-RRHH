@@ -29,14 +29,24 @@ class EmployeeController extends Controller
             ->where('user_id', '=', $dataEmployee['employee_id'])->first();
 
         if ($employee) {
-            /* $employee->name = isset($dataEmployee['name']) ? $dataEmployee['name'] : $employee->name;
-            $employee->legal_id = isset($dataEmployee['dni']) ? $dataEmployee['dni'] : $employee->legal_id;
-            $employee->admission_date = isset($dataEmployee['admission_date']) ? $dataEmployee['admission_date'] : $employee->name;
             $employee->name = isset($dataEmployee['name']) ? $dataEmployee['name'] : $employee->name;
-            $employee->name = isset($dataEmployee['name']) ? $dataEmployee['name'] : $employee->name; */
+            $employee->id_legal = isset($dataEmployee['dni']) ? $dataEmployee['dni'] : $employee->id_legal;
+
+            $employee->address = array_merge(
+                isset($employee->address) ? $employee->address : [],
+                isset($dataEmployee['address']) ? $dataEmployee['address'] : []
+            );
+
+            $employee->contact = array_merge(
+                isset($employee->address) ? $employee->address : [],
+                isset($dataEmployee['contact']) ? $dataEmployee['contact'] : []
+            );
+
+            $employee->admission_date = $dataEmployee['admission_date'];
+            $employee->role = $dataEmployee['role'];
             $employee->save();
 
-            return response()->json(['message' => 'empleado actualizado', "data" => $dataEmployee], 200);
+            return response()->json(['success' => true], 200);
         }
         return response()->json(['error' => 'BAD_REQUEST'], 400);
     }
