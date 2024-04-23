@@ -24,6 +24,7 @@ class Employee extends Model
         'employee_code',
         'address',
         'contact',
+        'credentials',
         'admission_date',
         'finish_date',
         'state',
@@ -34,6 +35,7 @@ class Employee extends Model
         'id_legal' => 'encrypted',
         'address' => 'array',
         'contact' => 'array',
+        'credentials' => 'array',
         'role' => 'array'
     ];
 

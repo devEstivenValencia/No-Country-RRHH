@@ -2,20 +2,46 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\EmployeeStoreRequest;
-use App\Http\Requests\EmployeeUpdateRequest;
+use App\Models\User;
 use App\Models\Company;
 use App\Models\Employee;
+use Illuminate\Support\Str;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\EmployeeStoreRequest;
+use App\Http\Requests\EmployeeUpdateRequest;
 
 class EmployeeController extends Controller
 {
     public function store(EmployeeStoreRequest $request): JsonResponse
     {
-        $data = $request->validated();
 
-        return response()->json(['message' => 'empleado creado'], 200);
+
+        $company = Company::where('user_id', '=', Auth::user()->id)->first();
+        $data = $request->validated();
+        $user = new User();
+        $user->id = Str::uuid(36);
+
+        $user->email = $data['employee']['credentials']['email'];
+        $user->email_verified_at = now();
+        $user->password = Hash::make($data['employee']['credentials']['password']);
+        $user->remember_token = Str::random(10);
+        $user->save();
+        $employee = new Employee();
+        $employee->user_id =
+            $user->id;
+        $employee->company_id = $company->id;
+        $employee->name = $data['employee']['name'];
+        $employee->id_legal = $data['employee']['dni'];
+        $employee->address = $data['employee']['address'];
+        $employee->contact = $data['employee']['contact'];
+        $employee->admission_date = $data['employee']['admission_date'];
+        $employee->role = $data['employee']['role'];
+
+
+        $employee->save();
+        return response()->json(['success' => true], 200);
     }
 
     public function update(EmployeeUpdateRequest $request): JsonResponse

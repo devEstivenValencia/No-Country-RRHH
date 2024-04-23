@@ -38,7 +38,7 @@ class Company extends Model
     ];
 
     protected $hidden = [
-        'id',
+        // 'id',
         'user_id',
         'created_at'
     ];
