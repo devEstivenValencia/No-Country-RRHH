@@ -4,6 +4,7 @@ import { Loader, Password, Typography } from '#/components'
 import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '#/components/ui'
 import { APPROUTES } from '#/config/APP.routes'
 import { NewEnterprise, Password as PasswordEntity, passwordSchema } from '#/entities'
+import useSecurity from '#/hooks/useSecurity'
 import { emailSchema } from '#/schemas'
 import { registerService } from '#/services'
 import { valibotResolver } from '@hookform/resolvers/valibot'
@@ -32,6 +33,8 @@ const registerSchema = v.object({
 })
 
 export default function RegisterPage() {
+	const {error,keypairCreated,getEncryptionKey} = useSecurity();
+
 	const router = useRouter()
 
 	const form = useForm<RegisterValues>({
@@ -46,7 +49,17 @@ export default function RegisterPage() {
 		setError
 	} = form
 
-	async function onSubmit(values: RegisterValues) {
+	function onSubmit(values: RegisterValues) {
+		if(keypairCreated){
+			sendDataEnctyped(values);
+		}else if(!error){
+			window.setTimeout(()=>onSubmit(values),100);
+		}else{
+			console.log(error);
+		}
+	}
+
+	async function sendDataEnctyped(values: RegisterValues){
 		const newEnterprise: NewEnterprise = {
 			companyName: values.companyName,
 			credentials: {
@@ -58,7 +71,7 @@ export default function RegisterPage() {
 				phone: values.phone
 			}
 		}
-		await registerService(newEnterprise)
+		await registerService(newEnterprise, getEncryptionKey)
 			.then(() => router.push(APPROUTES.DASHBOARD))
 			.catch(({ message }) => setError('root.server', { message }))
 	}
