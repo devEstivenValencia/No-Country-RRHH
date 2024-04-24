@@ -1,6 +1,7 @@
 'use client'
 
 import { Button, Icon, Typography } from "#/components";
+import { APPROUTES } from "#/config/APP.routes";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -37,13 +38,13 @@ export default function Layout ({children} : {children: React.ReactNode}) {
                             <Typography as='p' className="text-neutro-500 font-bold p-1">Navegación</Typography>
                             <ul className="flex flex-col">
                                 <li>
-                                    <Link href='/app' className="hover:bg-primary-500 hover:text-neutro-50 text-neutro-950 hover:font-bold flex flex-row h-10 p-2 gap-3 rounded-md md:w-52">
+                                    <Link href={APPROUTES.DASHBOARD} className="hover:bg-primary-500 hover:text-neutro-50 text-neutro-950 hover:font-bold flex flex-row h-10 p-2 gap-3 rounded-md md:w-52">
                                         <Icon name="home"></Icon>
                                         Inicio
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link href='/app/employees' className="hover:bg-primary-500 hover:text-neutro-50 text-neutro-950 hover:font-bold flex flex-row h-10 p-2 gap-3 rounded-md md:w-52">
+                                    <Link href={APPROUTES.EMPLOYEES} className="hover:bg-primary-500 hover:text-neutro-50 text-neutro-950 hover:font-bold flex flex-row h-10 p-2 gap-3 rounded-md md:w-52">
                                         <Icon name="user"></Icon>
                                         Empleado
                                     </Link>
