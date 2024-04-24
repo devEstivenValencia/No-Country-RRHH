@@ -52,6 +52,10 @@ class Company extends Model
     {
         return $this->hasMany(NonWorkingDays::class);
     }
+    public function employees(): HasMany
+    {
+        return $this->hasMany(Employee::class);
+    }
 
     protected function contact(): Attribute
     {
