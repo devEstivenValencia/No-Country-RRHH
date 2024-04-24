@@ -8,5 +8,8 @@ export const APIROUTES: KeyWithValue<any> = {
 		VALIDATE: `${APIURL}/session/validate`
 	},
 	REGISTER: `${APIURL}/account/enterprise/register`,
-	ENCRYPT: `${APIURL}/encrypt`
+	ENCRYPT: `${APIURL}/encrypt`,
+	EMPLOYEE: {
+		CREATE: `${APIURL}/enterprise/employee/create`
+	}
 } as const
