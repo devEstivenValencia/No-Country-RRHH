@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\SessionRequest;
+use App\Models\KeyManager;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 
@@ -20,7 +21,8 @@ class SessionController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if ($user && Hash::check($request->password, $user->password)) {
-            $sharedKey = base64_decode(Env('SECOND_KEY'));
+            $sharedKey = base64_decode($request->shared_key);
+            KeyManager::find($request->key_id)->delete();
 
             $user->tokens()->delete();
 
@@ -59,7 +61,8 @@ class SessionController extends Controller
             }
         }
         return response()->json([
-            'error' => 'UNAUTHORIZED'
+            'error' => 'UNAUTHORIZED',
+            'message' => 'el usuario o contraseña no son válidos'
         ], 401);
     }
 
@@ -76,7 +79,8 @@ class SessionController extends Controller
             return response()->json(['success' => true], 200);
         }
         return response()->json([
-            'error' => 'SESSION_NOT_FOUND'
+            'error' => 'SESSION_NOT_FOUND',
+            'message' => 'sesión no encontrada'
         ], 404);
     }
 
@@ -97,7 +101,8 @@ class SessionController extends Controller
             ], 200);
         }
         return response()->json([
-            'error' => 'INVALID_TOKEN'
+            'error' => 'INVALID_TOKEN',
+            'message' => 'sesion invalida'
         ], 404);
     }
 }

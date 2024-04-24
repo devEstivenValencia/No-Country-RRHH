@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Classes\CustomEncrypter;
+use App\Models\KeyManager;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CompanyRequest extends CustomFormRequest
@@ -33,15 +34,26 @@ class CompanyRequest extends CustomFormRequest
         ); */
 
         //new
-        $sharedKey = base64_decode(Env('SECOND_KEY'));
+        $keyManager = KeyManager::find($this->key_id);
+        if ($keyManager) {
+            $sharedKey = $keyManager->key;
 
-        $dataDecrypted = CustomEncrypter::recurseSpecificSchemaOpenSSL(
-            $this->toArray(),
-            $keyToDecrypt,
-            $sharedKey
-        );
-        //end new
-        $this->merge($dataDecrypted);
+            $dataDecrypted = CustomEncrypter::recurseSpecificSchemaOpenSSL(
+                $this->toArray(),
+                $keyToDecrypt,
+                base64_decode($sharedKey)
+            );
+            $dataDecrypted['shared_key'] = $sharedKey;
+            //end new
+            $this->merge($dataDecrypted);
+        } else {
+            throw new HttpResponseException(
+                response()->json([
+                    'error' => 'BAD_REQUEST',
+                    'message' => 'error con la clave de encriptación'
+                ], 400)
+            );
+        }
     }
 
     public function authorize(): bool

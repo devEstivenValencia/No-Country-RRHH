@@ -8,6 +8,7 @@ use App\Http\Requests\CompanyRequest;
 use App\Http\Requests\CompanyUpdateRequest;
 use App\Models\User;
 use App\Models\Company;
+use App\Models\KeyManager;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -45,7 +46,8 @@ class CompanyController extends Controller
 
 
         //new
-        $sharedKey = base64_decode(Env('SECOND_KEY'));
+        $sharedKey = base64_decode($request->shared_key);
+        KeyManager::find($request->key_id)->delete();
         return response()->json(
             [
                 'id_key' => 'hola mundo',

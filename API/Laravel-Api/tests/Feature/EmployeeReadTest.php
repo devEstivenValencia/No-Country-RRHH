@@ -8,8 +8,6 @@ use App\Models\Company;
 use App\Models\Employee;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class EmployeeReadTest extends TestCase
 {
@@ -20,7 +18,7 @@ class EmployeeReadTest extends TestCase
     {
         $user_company = new User();
         $user_company->id = Str::uuid(36);
-        $user_company->email = 'employee-update-company@email.com';
+        $user_company->email = 'employee-read-company@email.com';
         $user_company->email_verified_at = now();
         $user_company->password = Hash::make('AAAbbb111222@');
         $user_company->remember_token = Str::random(10);
@@ -34,7 +32,7 @@ class EmployeeReadTest extends TestCase
 
         $user = new User();
         $user->id = Str::uuid(36);
-        $user->email = 'employee-update-employee@email.com';
+        $user->email = 'employee-read-employee@email.com';
         $user->email_verified_at = now();
         $user->password = Hash::make('AAAbbb111222@');
         $user->remember_token = Str::random(10);
@@ -66,7 +64,7 @@ class EmployeeReadTest extends TestCase
 
 
         $credentialsToEncrypt = [
-            'email' => 'employee-update-company@email.com',
+            'email' => 'employee-read-company@email.com',
             'password' => 'AAAbbb111222@'
         ];
 
