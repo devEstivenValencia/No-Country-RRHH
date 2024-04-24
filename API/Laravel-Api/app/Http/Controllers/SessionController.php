@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\CustomEncrypter;
 use App\Classes\UserCapabilities;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -19,6 +20,7 @@ class SessionController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if ($user && Hash::check($request->password, $user->password)) {
+            $sharedKey = base64_decode(Env('SECOND_KEY'));
 
             $user->tokens()->delete();
 
@@ -30,7 +32,13 @@ class SessionController extends Controller
                         'session' => $token->plainTextToken,
                         'user' => array_merge(
                             $user->toArray(),
-                            $company->toArray()
+                            $company->toArray(),
+                            [
+                                'contact' => [
+                                    'email' => CustomEncrypter::encryptOpenSSL($company->contact['email'], $sharedKey),
+                                    'phone' => CustomEncrypter::encryptOpenSSL($company->contact['phone_number'], $sharedKey),
+                                ]
+                            ]
                         )
                     ],
                     200

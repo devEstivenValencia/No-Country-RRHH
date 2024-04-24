@@ -32,7 +32,7 @@ Route::put('enterprise/employee/modify', [EmployeeController::class, 'update'])-
 Route::post('encrypt', [EncryptController::class, 'encrypt_data']);
 
 
-/* Route::post('encryptkey', function (Request $request) {
+Route::post('encryptkey', function (Request $request) {
     $publicKey = $request->get('publicKey');
 
     $sharedKey = base64_decode(Env('SECOND_KEY'));
@@ -43,7 +43,7 @@ Route::post('encrypt', [EncryptController::class, 'encrypt_data']);
         'encryptedKey' => base64_encode($encryptedKey),
         'key_id' => 'el uuid de la clave', // uuid string
     ], 200);
-}); */
+});
 /*
 Route::post('decrypt', function (Request $request) {
     $handshakeId = $request->get('handshakeId');

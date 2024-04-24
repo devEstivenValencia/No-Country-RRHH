@@ -23,6 +23,7 @@ class CustomFormRequest extends FormRequest
         throw new HttpResponseException(
             response()->json([
                 'error' => "BAD_REQUEST",
+                'message' => $errors[array_key_first($errors)][0],
                 'errors' => $nested
             ], 400)
         );

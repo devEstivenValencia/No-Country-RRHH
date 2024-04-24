@@ -9,7 +9,8 @@ class CustomAuthorizationException extends AuthorizationException
     public function render($request)
     {
         return response()->json([
-            'error' => 'UNAUTHENTICATED'
+            'error' => 'UNAUTHENTICATED',
+            'message' => 'usuario no autorizado'
         ], 401);
     }
 }

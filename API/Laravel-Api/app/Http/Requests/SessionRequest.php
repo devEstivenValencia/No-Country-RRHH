@@ -8,8 +8,21 @@ class SessionRequest extends CustomFormRequest
 {
     protected function prepareForValidation()
     {/* 
-        $dataDecrypted = CustomEncrypter::decrypt($this->toArray()); */
-        $dataDecrypted = CustomEncrypter::recurse(array(CustomEncrypter::class, 'decryptString'), $this->toArray());
+        $dataDecrypted = CustomEncrypter::decrypt($this->toArray()); *//* 
+        $dataDecrypted = CustomEncrypter::recurse(array(CustomEncrypter::class, 'decryptString'), $this->toArray()); */
+
+        $keyToDecrypt = [
+            'email',
+            'password'
+        ];
+
+        $sharedKey = base64_decode(Env('SECOND_KEY'));
+
+        $dataDecrypted = CustomEncrypter::recurseSpecificSchemaOpenSSL(
+            $this->toArray(),
+            $keyToDecrypt,
+            $sharedKey
+        );
 
         $this->merge($dataDecrypted);
     }

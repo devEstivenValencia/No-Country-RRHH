@@ -32,7 +32,8 @@ class Handler extends ExceptionHandler
             if ($e instanceof AuthenticationException) {
                 if ($request->is('api/*')) {
                     return response()->json([
-                        'error' => 'UNAUTHENTICATED'
+                        'error' => 'UNAUTHENTICATED',
+                        'message' => 'usuario no autenticado'
                     ], 401);
                 }
             }

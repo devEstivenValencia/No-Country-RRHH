@@ -26,20 +26,20 @@ class CompanyRequest extends CustomFormRequest
             ]
         ];
 
-        $dataDecrypted = CustomEncrypter::recurseSpecificSchema(
+        /* $dataDecrypted = CustomEncrypter::recurseSpecificSchema(
             array(CustomEncrypter::class, 'decryptString'),
             $this->toArray(),
             $keyToDecrypt
-        );
+        ); */
 
         //new
-        /* $sharedKey = base64_decode(Env('SECOND_KEY'));
+        $sharedKey = base64_decode(Env('SECOND_KEY'));
 
         $dataDecrypted = CustomEncrypter::recurseSpecificSchemaOpenSSL(
             $this->toArray(),
             $keyToDecrypt,
             $sharedKey
-        ); */
+        );
         //end new
         $this->merge($dataDecrypted);
     }

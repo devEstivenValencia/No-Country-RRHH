@@ -32,7 +32,7 @@ class CompanyController extends Controller
 
         $company->save();
 
-        return response()->json(
+        /* return response()->json(
             [
                 'session' => $user->createToken('token', UserCapabilities::company(), Carbon::now()->addDays(7))->plainTextToken,
                 'user' => array_merge(
@@ -41,13 +41,14 @@ class CompanyController extends Controller
                 )
             ],
             201
-        );
+        ); */
 
-        /*
+
         //new
         $sharedKey = base64_decode(Env('SECOND_KEY'));
         return response()->json(
             [
+                'id_key' => 'hola mundo',
                 'session' => $user->createToken('token', UserCapabilities::company(), Carbon::now()->addDays(7))->plainTextToken,
                 'user' => array_merge(
                     $user->toArray(),
@@ -55,14 +56,14 @@ class CompanyController extends Controller
                     [
                         'contact' => [
                             'email' => CustomEncrypter::encryptOpenSSL($company->contact['email'], $sharedKey),
-                            'phone_number' => CustomEncrypter::encryptOpenSSL($company->contact['phone_number'], $sharedKey),
+                            'phone' => CustomEncrypter::encryptOpenSSL($company->contact['phone_number'], $sharedKey),
                         ]
                     ]
                 )
             ],
             201
         );
-        //end*/
+        //end
     }
     public function update(CompanyUpdateRequest $request)
     {
