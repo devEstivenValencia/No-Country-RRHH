@@ -10,6 +10,7 @@ class UserCapabilities
             'update-company',
             'create-employee',
             'update-employee',
+            'Read-employee'
         ];
     }
 

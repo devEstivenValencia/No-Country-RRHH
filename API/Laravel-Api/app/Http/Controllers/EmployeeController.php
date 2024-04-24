@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EmployeeReadRequest;
 use App\Models\User;
 use App\Models\Company;
 use App\Models\Employee;
@@ -14,6 +15,43 @@ use App\Http\Requests\EmployeeUpdateRequest;
 
 class EmployeeController extends Controller
 {
+
+    public function index(EmployeeReadRequest $request): JsonResponse
+    {
+        $request->validated();
+        $company = Company::where('user_id', Auth::user()->id)->first();
+
+        if ($company) {
+
+            $employees = $company->employees()->get();
+
+
+            $employeesData = [];
+            foreach ($employees as $employee) {
+                $employeesData[] = [
+                    'employee_id' => $employee->id,
+                    'name' => $employee->name,
+                    'dni' => $employee->id_legal,
+                    "address" => $employee->address,
+                    "contact" => $employee->contact,
+                ];
+            }
+
+
+            $response = [
+                'company_id' => $company->id,
+                'company_name' => $company->company_name,
+                'employees' => $employeesData,
+            ];
+
+
+            return response()->json($response);
+        } else {
+            return response()->json(['message' => 'No se encontró la compañía asociada al usuario.'], 404);
+        }
+    }
+
+
     public function store(EmployeeStoreRequest $request): JsonResponse
     {
 
