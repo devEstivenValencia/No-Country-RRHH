@@ -5,7 +5,7 @@ import { APPROUTES } from './config/APP.routes'
 
 export async function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl
-	console.log('middleware ejecutado en:', '\n', pathname)
+	//console.log('middleware ejecutado en:', '\n', pathname)
 
 	try {
 		const session = request.cookies.get('session')
@@ -29,7 +29,7 @@ export async function middleware(request: NextRequest) {
 
 		throw new Error('Sesion no encontrada en el Navegador')
 	} catch (reason: any) {
-		console.error('❗', 'Middleware de sesion fallo:', '\n', reason)
+		//console.error('❗', 'Middleware de sesion fallo:', '\n', reason)
 		if (pathname === APPROUTES.LOGIN || pathname === APPROUTES.REGISTER || pathname === APPROUTES.HOME)
 			return NextResponse.next()
 

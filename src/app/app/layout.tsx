@@ -4,11 +4,21 @@ import { Button, Icon, Typography } from "#/components";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import Cookies from 'js-cookie'
+import { useRouter } from "next/navigation";
+import { APPROUTES } from "#/config/APP.routes";
 
 export default function Layout ({children} : {children: React.ReactNode}) {
 
     const [openMenu, setOpenMenu] = useState(false)
     const handleOpenMenu = () => setOpenMenu(!openMenu)
+	const router = useRouter()
+
+    function onClick(){
+		Cookies.remove('session')
+		localStorage.removeItem('user')
+        router.push(APPROUTES.LOGIN)
+    }
 
     return (
         <section className="flex flex-col md:flex-row">
@@ -57,7 +67,7 @@ export default function Layout ({children} : {children: React.ReactNode}) {
                                     <Link href=''>Configuración</Link>
                                 </li>
                                 <li>
-                                    <Button className='hover:bg-primary-50 text-neutro-950 font-normal w-full h-10 p-2 gap-3 text-base rounded-md justify-start md:w-52'>
+                                    <Button onClick={onClick} className='hover:bg-primary-50 text-neutro-950 font-normal w-full h-10 p-2 gap-3 text-base rounded-md justify-start md:w-52'>
                                         <Icon name="sign-out-alt"></Icon>
                                         Cerrar sesión
 			        				</Button>

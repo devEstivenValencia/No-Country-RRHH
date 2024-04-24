@@ -32,9 +32,10 @@ const registerSchema = v.object({
 	checkbox: v.boolean()
 })
 
-export default function RegisterPage() {
-	const {error,keypairCreated,getEncryptionKey} = useSecurity();
+const sleep = ( ms: number ) => new Promise(resolve => setTimeout(resolve, ms));
 
+export default function RegisterPage() {
+	const { error, keypairCreated, keypair, publicPemKey } = useSecurity();
 	const router = useRouter()
 
 	const form = useForm<RegisterValues>({
@@ -49,32 +50,30 @@ export default function RegisterPage() {
 		setError
 	} = form
 
-	function onSubmit(values: RegisterValues) {
-		if(keypairCreated){
-			sendDataEnctyped(values);
-		}else if(!error){
-			window.setTimeout(()=>onSubmit(values),100);
+	async function onSubmit(values: RegisterValues) {
+		while(!error && !keypairCreated){
+			await sleep(100)
+		}
+		if(keypairCreated && publicPemKey){
+			const newEnterprise: NewEnterprise = {
+				companyName: values.companyName,
+				credentials: {
+					email: values.email,
+					password: values.password
+				},
+				contact: {
+					email: values.email,
+					phone: values.phone
+				}
+			}
+			await registerService(newEnterprise, keypair, publicPemKey )
+				.then(() => router.push(APPROUTES.DASHBOARD))
+				.catch(({ message }) => setError('root.server', {message}))
 		}else{
-			console.log(error);
+			setError('root.server', { 'message': error })
 		}
 	}
 
-	async function sendDataEnctyped(values: RegisterValues){
-		const newEnterprise: NewEnterprise = {
-			companyName: values.companyName,
-			credentials: {
-				email: values.email,
-				password: values.password
-			},
-			contact: {
-				email: values.email,
-				phone: values.phone
-			}
-		}
-		await registerService(newEnterprise, getEncryptionKey)
-			.then(() => router.push(APPROUTES.DASHBOARD))
-			.catch(({ message }) => setError('root.server', { message }))
-	}
 
 	return (
 		<section className='md:bg-secondary-300 md:h-screen flex justify-center items-center '>

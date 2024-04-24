@@ -5,6 +5,7 @@ import { Password } from '#/components/Password'
 import Typography from '#/components/Typography.component'
 import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '#/components/ui'
 import { APPROUTES } from '#/config/APP.routes'
+import useSecurity from '#/hooks/useSecurity'
 import { Credentials, credentialsDefaultValues } from '#/entities/Credentials.entity'
 import { loginService } from '#/services/login.service'
 import Image from 'next/image'
@@ -12,7 +13,10 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 
+const sleep = ( ms: number ) => new Promise(resolve => setTimeout(resolve, ms));
+
 export default function LoginPage() {
+	const { error, keypairCreated, keypair, publicPemKey } = useSecurity();
 	const router = useRouter()
 
 	const form = useForm<Credentials>({
@@ -26,9 +30,16 @@ export default function LoginPage() {
 	} = form
 
 	async function onSubmit(credentials: Credentials) {
-		await loginService(credentials)
-			.then(res => router.push(APPROUTES.DASHBOARD))
-			.catch(({ message }) => setError('root.server', { message }))
+		while(!error && !keypairCreated){
+			await sleep(100)
+		}
+		if(keypairCreated && publicPemKey){
+			await loginService(credentials, keypair, publicPemKey )
+				.then(() => router.push(APPROUTES.DASHBOARD))
+				.catch(({ message }) => setError('root.server', {message}))
+		}else{
+			setError('root.server', { 'message': error })
+		}
 	}
 
 	return (
@@ -83,7 +94,7 @@ export default function LoginPage() {
 								type='submit'
 								className='bg-primary-500 text-neutro-50 font-bold h-9 md:w-[448px] w-72 shadow-md'
 							>
-								{isSubmitting ? <Loader /> : 'Iniciar sesion'}
+								{isSubmitting ? <Loader /> : 'Iniciar Sesión'}
 							</Button>
 						</div>
 
