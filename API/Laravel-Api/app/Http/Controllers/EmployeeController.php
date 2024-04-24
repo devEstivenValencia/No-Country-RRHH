@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\EmployeeStoreRequest;
 use App\Http\Requests\EmployeeUpdateRequest;
+use App\Models\KeyManager;
 
 class EmployeeController extends Controller
 {
@@ -25,7 +26,6 @@ class EmployeeController extends Controller
 
             $employees = $company->employees()->get();
 
-
             $employeesData = [];
             foreach ($employees as $employee) {
                 $employeesData[] = [
@@ -37,13 +37,11 @@ class EmployeeController extends Controller
                 ];
             }
 
-
             $response = [
                 'company_id' => $company->id,
                 'company_name' => $company->company_name,
                 'employees' => $employeesData,
             ];
-
 
             return response()->json($response);
         } else {
@@ -54,8 +52,6 @@ class EmployeeController extends Controller
 
     public function store(EmployeeStoreRequest $request): JsonResponse
     {
-
-
         $company = Company::where('user_id', '=', Auth::user()->id)->first();
         $data = $request->validated();
         $user = new User();
@@ -67,8 +63,7 @@ class EmployeeController extends Controller
         $user->remember_token = Str::random(10);
         $user->save();
         $employee = new Employee();
-        $employee->user_id =
-            $user->id;
+        $employee->user_id = $user->id;
         $employee->company_id = $company->id;
         $employee->name = $data['employee']['name'];
         $employee->id_legal = $data['employee']['dni'];
@@ -76,7 +71,6 @@ class EmployeeController extends Controller
         $employee->contact = $data['employee']['contact'];
         $employee->admission_date = $data['employee']['admission_date'];
         $employee->role = $data['employee']['role'];
-
 
         $employee->save();
         return response()->json(['success' => true], 200);

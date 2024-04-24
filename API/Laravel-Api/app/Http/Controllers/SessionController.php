@@ -36,6 +36,7 @@ class SessionController extends Controller
                             $user->toArray(),
                             $company->toArray(),
                             [
+                                'type' => 'company',
                                 'contact' => [
                                     'email' => CustomEncrypter::encryptOpenSSL($company->contact['email'], $sharedKey),
                                     'phone' => CustomEncrypter::encryptOpenSSL($company->contact['phone_number'], $sharedKey),
@@ -48,12 +49,23 @@ class SessionController extends Controller
             } elseif ($employee = $user->employee()->first()) {
                 $token = $user->createToken('token', UserCapabilities::employee(), Carbon::now()->addDays(7));
 
+                $contact = null;
+                if (isset($company->contact)) {
+                    $contact = [
+                        'email' => CustomEncrypter::encryptOpenSSL($company->contact['email'], $sharedKey),
+                        'phone' => CustomEncrypter::encryptOpenSSL($company->contact['phone_number'], $sharedKey),
+                    ];
+                }
                 return response()->json(
                     [
                         'session' => $token->plainTextToken,
                         'user' => array_merge(
                             $user->toArray(),
-                            $employee->toArray()
+                            $employee->toArray(),
+                            [
+                                'type' => 'employee',
+                                'contact' => $contact
+                            ]
                         )
                     ],
                     200

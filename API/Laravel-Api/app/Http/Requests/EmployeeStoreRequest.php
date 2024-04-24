@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use App\Classes\CustomEncrypter;
+use App\Models\KeyManager;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class EmployeeStoreRequest extends CustomFormRequest
 {
@@ -17,7 +19,6 @@ class EmployeeStoreRequest extends CustomFormRequest
                     'province',
                     'city',
                     'address',
-                    'zipcode',
                 ],
                 'contact' => [
                     'email',
@@ -28,13 +29,27 @@ class EmployeeStoreRequest extends CustomFormRequest
                 ]
             ]
         ];
-        $dataDecrypted = CustomEncrypter::recurseSpecificSchema(
-            array(CustomEncrypter::class, 'decryptString'),
-            $this->toArray(),
-            $keyToDecrypt
-        );
-        // dd($dataDecrypted);
-        $this->merge($dataDecrypted);
+
+        $keyManager = KeyManager::find($this->key_id);
+        if ($keyManager) {
+            $sharedKey = $keyManager->key;
+
+            $dataDecrypted = CustomEncrypter::recurseSpecificSchemaOpenSSL(
+                $this->toArray(),
+                $keyToDecrypt,
+                base64_decode($sharedKey)
+            );
+            $dataDecrypted['shared_key'] = $sharedKey;
+            //end new
+            $this->merge($dataDecrypted);
+        } else {
+            throw new HttpResponseException(
+                response()->json([
+                    'error' => 'BAD_REQUEST',
+                    'message' => 'error con la clave de encriptación'
+                ], 400)
+            );
+        }
     }
 
     public function authorize(): bool
@@ -53,7 +68,6 @@ class EmployeeStoreRequest extends CustomFormRequest
                 'employee.address.province' => 'required|string',
                 'employee.address.city' => 'required|string|',
                 'employee.address.address' => 'required|string',
-                'employee.address.zipcode' => 'required|string',
 
                 'employee.contact.email' => 'required|email',
                 'employee.contact.phone' => 'required|string',
@@ -85,8 +99,6 @@ class EmployeeStoreRequest extends CustomFormRequest
             'employee.address.city.required' => 'La ciudad del empleado es obligatoria',
             'employee.address.address.string' => 'La dirección del empleado debe ser texto',
             'employee.address.address.required' => 'La dirección del empleado es obligatoria',
-            'employee.address.zipcode.string' => 'El codigo postal del empleado debe ser texto',
-            'employee.address.zipcode.required' => 'El codigo postal del empleado es obligatorio',
             'employee.contact.email.email' => 'El email de contacto ingresado no es un email válido',
             'employee.contact.email.required' => 'El email de contacto es obligatorio',
             'employee.contact.phone.required' => 'El teléfono del empleado es obligatorio',
