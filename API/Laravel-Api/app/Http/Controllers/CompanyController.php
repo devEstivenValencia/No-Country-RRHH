@@ -26,6 +26,7 @@ class CompanyController extends Controller
         $company->id = Str::uuid();
         $company->user_id = $user->id;
         $company->company_name = $data['company_name'];
+        $company->verified = false;
         $company->contact = [
             'phone_number' => $data['contact']['phone'],
             'email' => $data['contact']['email']
@@ -59,7 +60,8 @@ class CompanyController extends Controller
                         'contact' => [
                             'email' => CustomEncrypter::encryptOpenSSL($company->contact['email'], $sharedKey),
                             'phone' => CustomEncrypter::encryptOpenSSL($company->contact['phone_number'], $sharedKey),
-                        ]
+                        ],
+                        'type' => 'company'
                     ]
                 )
             ],
