@@ -6,7 +6,7 @@ import { cipher, pki, util } from 'node-forge'
 
 export async function encryptkeyService(keypair: pki.rsa.KeyPair | undefined, publicPemKey: string): Promise<any> {
 	try {
-		if (!keypair) throw new Error('no se pudoieron generar las claves')
+		if (!keypair) throw new Error('No se pudieron generar las claves')
 
 		const { data } = await axios.post(APIROUTES.ENCRYPT_KEY, { publicKey: publicPemKey })
 
