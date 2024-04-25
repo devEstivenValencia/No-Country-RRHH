@@ -11,6 +11,8 @@ export const APIROUTES: KeyWithValue<any> = {
 	ENCRYPT: `${APIURL}/encrypt`,
 	ENCRYPT_KEY: `${APIURL}/encryptkey`,
 	EMPLOYEE: {
-		CREATE: `${APIURL}/enterprise/employee/create`
+		CREATE: `${APIURL}/enterprise/employee/create`,
+		GET_ALL: `${APIURL}/enterprise/employee`,
+		DELETE: `${APIURL}/enterprise/employee/delete`
 	}
 } as const

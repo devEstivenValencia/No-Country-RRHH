@@ -3,13 +3,62 @@
 import { Button, Icon, Input, Typography } from "#/components";
 import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "#/components/ui/table"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { EmployeeForm } from "#/components/Employees/EmployeeForm.component";
+import useSecurity from "#/hooks/useSecurity";
+import { Employee } from "#/entities/Employee.entity";
+import { getEmployeesService } from "#/services/getEmployees.service";
+import { deleteEmployeeService } from "#/services";
 
 export default function Employees () {
+	const { error, keypairCreated, keypair, publicPemKey } = useSecurity();
+    const [loading, setLoading] = useState<boolean>(true)
+    const [employees, setEmployees] = useState<Employee[]>([])
+    const [errorFetch, setErrorFetch] = useState<string>('')
+
+    const [open, setOpen] = useState<boolean>(false)
 
     const [clickAccions, setClickAccions] = useState(true)
     const handleClickAccions = () => setClickAccions(!clickAccions)
+    
+    useEffect(() => {
+        fetchEmployees()
+    }, [keypairCreated])
+
+    useEffect(() => {
+        if(error) setErrorFetch(error)
+    }, [error]);
+    
+    async function fetchEmployees(){
+        if(keypairCreated && publicPemKey){
+            await getEmployeesService(keypair, publicPemKey )
+                .then((data) => setEmployees(data.employees))
+                .catch(({ message }) => setErrorFetch(message))
+                .finally(() => setLoading(false))
+        }else{
+            setErrorFetch(error)
+        }
+    }
+
+    function editEmployee(id: string){
+
+    }
+    async function deleteEmployee(id: string){
+        setLoading(true)
+        deleteEmployeeService(id)
+        .then((data) => {
+            setEmployees([])
+            fetchEmployees()
+        })
+        .catch(({ message }) => setErrorFetch(message))
+        .finally(() => setLoading(false))
+    }
+
+    function reset(){
+        setEmployees([])
+        setOpen(false)
+        fetchEmployees()
+    }
 
     return (
         <section className="bg-primary-50 min-h-screen h-full w-full flex flex-col pt-2">
@@ -34,7 +83,7 @@ export default function Employees () {
             <div className="bg-[#FFFFFF] h-auto w-auto rounded-3xl md:mt-14 m-8 shadow-md items-center md:px-12 p-12">
                 <div className="flex justify-between gap-3">
                     <Input type="text" placeholder="Buscar Empleado" className="md:w-96 h-10 gap-3 border-neutro-300"></Input>
-                    <EmployeeForm/>
+                    <EmployeeForm reset={reset} open={open} setOpen={setOpen} />
                 </div>
                 <Table className="mt-4 border border-neutro-300">
                     <TableHeader>
@@ -46,33 +95,35 @@ export default function Employees () {
                         <TableHead>Fecha de ingreso</TableHead>
                         <TableHead>Fecha de salida</TableHead>
                         <TableHead>Rol</TableHead>
-                        <TableHead>Código del empleado</TableHead>
                         <TableHead className="text-right">Acciones</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        <TableRow className="border-b-neutro-300 h-12">
-                        <TableCell>Hectro Laguna</TableCell>
-                        <TableCell>74653245</TableCell>
-                        <TableCell>Argentina</TableCell>
-                        <TableCell>hector.l@gmail.com</TableCell>
-                        <TableCell>11/04/2024</TableCell>
-                        <TableCell>Fecha de salida</TableCell>
-                        <TableCell>Arquitecto</TableCell>
-                        <TableCell>A523684</TableCell>
-                        <TableCell onClick={handleClickAccions} className="flex justify-end">
-                            {clickAccions ? <Button className="w-16"><Icon name="menu-dots-vertical"></Icon></Button> :
-                            <div className="rounded-md shadow-md flex w-16">
-                                <Button className="p-1 text-yellow-200 hover:text-yellow-500">
-                                    <Icon name="edit"></Icon>
-                                </Button>
-                                <Button className="p-1 text-red-300 hover:text-red-500">
-                                    <Icon name="trash"></Icon>
-                                </Button>
-                            </div>
-                            }
-                        </TableCell>
-                        </TableRow>
+                        { employees && employees.map((emp: Employee)=>{
+                            return (
+                                <TableRow className="border-b-neutro-300 h-12" key={emp.id}>
+                                    <TableCell>{emp.name}</TableCell>
+                                    <TableCell>{emp.dni}</TableCell>
+                                    <TableCell>{emp.location.country}</TableCell>
+                                    <TableCell>{emp.contact.email}</TableCell>
+                                    <TableCell>{emp.admissionDate}</TableCell>
+                                    <TableCell>{emp.finishDate}</TableCell>
+                                    <TableCell>{emp.role}</TableCell>
+                                    <TableCell onClick={handleClickAccions} className="flex justify-end">
+                                        {clickAccions ? <Button className="w-16"><Icon name="menu-dots-vertical"></Icon></Button> :
+                                        <div className="rounded-md shadow-md flex w-16">
+                                            <Button onClick={ () => editEmployee(emp.id) } className="p-1 text-yellow-200 hover:text-yellow-500">
+                                                <Icon name="edit"></Icon>
+                                            </Button>
+                                            <Button onClick={ () => deleteEmployee(emp.id) } className="p-1 text-red-300 hover:text-red-500">
+                                                <Icon name="trash"></Icon>
+                                            </Button>
+                                        </div>
+                                        }
+                                    </TableCell>
+                                </TableRow>
+                            )
+                        })}
                     </TableBody>
                 </Table>
             </div>

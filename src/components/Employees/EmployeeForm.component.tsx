@@ -44,7 +44,7 @@ const formEmployeeSchema = v.object({
         role: v.string()
       })
 
-export function EmployeeForm () {
+export function EmployeeForm (props: { reset: Function, open: Boolean, setOpen: Function }) {
 	const { error, keypairCreated, keypair, publicPemKey } = useSecurity();
     const router = useRouter()
 
@@ -91,9 +91,7 @@ export function EmployeeForm () {
             } 
 			await employeeService(newEmployee, keypair, publicPemKey )
             .then(() => {
-                
-                router.refresh()
-                router.push(APPROUTES.EMPLOYEES)
+                props.reset()
             })
             .catch(({ message }) => setError('root.server', { message }))
 		}else{
@@ -102,7 +100,7 @@ export function EmployeeForm () {
     }
 
     return (
-        <Dialog>
+        <Dialog open={props.open} onOpenChange={props.setOpen}>
             <DialogTrigger asChild className="bg-slate-400">
                 <Button variant='outline' className="bg-green-400 hover:bg-green-500 text-neutro-50 md:gap-4 gap-1 ">
                     Agregar
