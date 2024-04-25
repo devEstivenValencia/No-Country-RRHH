@@ -9,9 +9,12 @@ export async function middleware(request: NextRequest) {
 
 	try {
 		const session = request.cookies.get('session')
+		console.log('cokies ', session)
 		if (session) {
-			if (pathname === APPROUTES.LOGIN || pathname === APPROUTES.REGISTER)
+			if (pathname === APPROUTES.LOGIN || pathname === APPROUTES.REGISTER) {
+				console.error('se va al dashboard')
 				return NextResponse.redirect(new URL(APPROUTES.DASHBOARD, request.url))
+			}
 			const { value: token } = session
 
 			await fetch(APIROUTES?.SESSION?.VALIDATE, {

@@ -3,12 +3,28 @@
 import { Button, Icon, Typography } from "#/components";
 import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "#/components/ui/table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle } from "#/components/ui/card";
+import { useRouter } from "next/navigation";
+import { APPROUTES } from "#/config/APP.routes";
 
 export default function App() {
     const [clickAccions, setClickAccions] = useState(true);
+    const [user,setUser] = useState();
+    const [userLoading,setUserLoading] = useState(false);
     const handleClickAccions = () => setClickAccions(!clickAccions);
+	const router = useRouter()
+
+    useEffect(()=>{
+        const user = JSON.parse(localStorage.getItem('user') || '{}')
+        console.log('user ', user)
+        if (user?.type === 'company' && !user.verified)
+            router.push(APPROUTES.ENTERPRISE)
+        if(!userLoading){
+            setUser(user)
+            setUserLoading(true)
+        }
+    },[])
 
     // Datos simulados
     const totalEmployees = 32;
@@ -29,7 +45,7 @@ export default function App() {
                             <AvatarFallback>JL</AvatarFallback>
                         </Avatar>
                         <div className="text-left pl-2">
-                            <Typography as='p' className="font-bold text-neutro-950">Joseph Leon</Typography>
+                            <Typography as='p' className="font-bold text-neutro-950">{user && user?.company_name}</Typography>
                             <Typography as='p' className="text-neutro-500 font-bold text-xs">Recursos Humanos</Typography>
                         </div>
                     </Button>
