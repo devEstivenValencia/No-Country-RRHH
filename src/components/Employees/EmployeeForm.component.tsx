@@ -107,7 +107,7 @@ export function EmployeeForm (props: { reset: Function, open: Boolean, setOpen: 
                     <Icon name="add"></Icon>
                 </Button>
             </DialogTrigger>
-            <DialogContent className="h-full md:h-auto w-full bg-[#FFFFFF] border border-neutro-50 overflow-auto touch-pan-y">
+            <DialogContent className="h-full md:max-h-[700px] w-full bg-[#FFFFFF] border border-neutro-50 overflow-auto touch-pan-y">
                 <Form {...form}>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="md:flex md:justify-between gap-8">
