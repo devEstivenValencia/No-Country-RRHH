@@ -34,6 +34,7 @@ export async function loginService(
 			user.contact.email = decryptData(decrypter, user.contact.email)
 			user.contact.phone = decryptData(decrypter, user.contact.phone)
 		}
+		console.log(user)
 
 		Cookies.set('session', session)
 		localStorage.setItem('user', JSON.stringify(user))
