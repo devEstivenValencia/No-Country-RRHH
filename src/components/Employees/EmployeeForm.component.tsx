@@ -11,6 +11,8 @@ import { useRouter } from "next/navigation";
 import { NewEmployee } from "#/entities/NewEmployee.entity";
 import { employeeService } from "#/services/newEmployee.service";
 import { APPROUTES } from "#/config/APP.routes";
+import { sleep } from "#/lib/utils";
+import useSecurity from "#/hooks/useSecurity";
 
 const defaultValues = {
     name: '',
@@ -18,7 +20,7 @@ const defaultValues = {
     country: '',
     province: '',
     city: '',
-    zipcode: '',
+    address: '',
     email: '',
     phone: '',
     password: '' as PasswordEntity,
@@ -34,7 +36,7 @@ const formEmployeeSchema = v.object({
         country: v.string(),
         province: v.string(),
         city: v.string(),
-        zipcode: v.string(),
+        address: v.string(),
         email: emailSchema,
         phone: v.string(),
         password: passwordSchema,
@@ -43,6 +45,7 @@ const formEmployeeSchema = v.object({
       })
 
 export function EmployeeForm () {
+	const { error, keypairCreated, keypair, publicPemKey } = useSecurity();
     const router = useRouter()
 
     const handleFormReset = () => {form.reset()}
@@ -55,36 +58,47 @@ export function EmployeeForm () {
     const {
         formState: { isSubmitting, errors },
         handleSubmit,
+        setValue,
         setError
     } = form
 
     async function onSubmit(values: EmployeeValues) {
-        const newEmployee: NewEmployee = {
-            // companyId: values.companyId,
-            employee: {
-                name: values.name,
-                dni: values.dni, 
-                address: { 
-                    country: values.country,
-                    province: values.province,
-                    city: values.city,
-                    zipcode: values.zipcode
-                }, 
-                contact: {
-                    email: values.email,
-                    phone: values.phone
-                },
-                credentials: {
-                    email: values.email,
-                    password: values.password
-                },
-                admissionDate: values.admissionDate,
-                role: values.role
-            }
-        } 
-        await employeeService(newEmployee)
-            .then(() => router.push(APPROUTES.EMPLOYEES))
+		while(!error && !keypairCreated){
+			await sleep(100)
+		}
+		if(keypairCreated && publicPemKey){
+            const newEmployee: NewEmployee = {
+                employee: {
+                    name: values.name,
+                    dni: values.dni, 
+                    location: { 
+                        country: values.country,
+                        province: values.province,
+                        city: values.city,
+                        address: values.address
+                    }, 
+                    contact: {
+                        email: values.email,
+                        phone: values.phone
+                    },
+                    credentials: {
+                        email: values.email,
+                        password: values.password
+                    },
+                    admissionDate: values.admissionDate,
+                    role: values.role
+                }
+            } 
+			await employeeService(newEmployee, keypair, publicPemKey )
+            .then(() => {
+                
+                router.refresh()
+                router.push(APPROUTES.EMPLOYEES)
+            })
             .catch(({ message }) => setError('root.server', { message }))
+		}else{
+			setError('root.server', { 'message': error })
+		}
     }
 
     return (
@@ -182,11 +196,11 @@ export function EmployeeForm () {
                                 />
                                 <FormField
                                     control={form.control}
-                                    name="zipcode"
+                                    name="address"
                                     render={({ field }) => (
                                         <>
                                             <FormItem>
-                                            <FormLabel htmlFor='zipcode'>Código postal</FormLabel>
+                                            <FormLabel htmlFor='address'>Código postal</FormLabel>
                                             <FormControl>
                                                 <Input type="text" placeholder="B5001" className="border border-neutro-400"  {...field} required/>
                                             </FormControl>
@@ -254,7 +268,7 @@ export function EmployeeForm () {
                                     render={({ field }) => (
                                         <>
                                             <FormItem className="">
-                                            <Password variant='current-password' className="w-full border border-neutro-400" {...field} required/>
+                                            <Password variant='new-password' className="w-full border border-neutro-400" {...field} onChange={e => setValue('password', e.target.value)} required/>
                                             </FormItem>
                                         </>
                                     )}

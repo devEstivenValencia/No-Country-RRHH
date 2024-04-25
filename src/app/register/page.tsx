@@ -13,6 +13,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import * as v from 'valibot'
+import { sleep } from "#/lib/utils";
 
 const defaultValues = {
 	companyName: '',
@@ -31,8 +32,6 @@ const registerSchema = v.object({
 	password: passwordSchema,
 	checkbox: v.boolean()
 })
-
-const sleep = ( ms: number ) => new Promise(resolve => setTimeout(resolve, ms));
 
 export default function RegisterPage() {
 	const { error, keypairCreated, keypair, publicPemKey } = useSecurity();
@@ -76,8 +75,8 @@ export default function RegisterPage() {
 
 
 	return (
-		<section className='md:bg-secondary-300 md:h-screen flex justify-center items-center '>
-			<div className='flex md:justify-center md:items-center md:shadow-md md:w-[1156px] md:h-[900px] md:rounded-3xl p-10 md:gap-20 bg-[#ffffff]'>
+		<section className='md:bg-secondary-300 md:min-h-screen flex justify-center items-center py-4'>
+			<div className='flex md:justify-center md:items-center md:shadow-md md:w-[1156px-2rem] md:h-[900px] md:rounded-3xl p-10 md:gap-20 bg-[#ffffff] md:mx-[2rem]'>
 				<Image
 					src='/images/register-image.png'
 					alt='Imagen Recursos'
@@ -87,7 +86,7 @@ export default function RegisterPage() {
 				/>
 
 				<Form {...form}>
-					<form onSubmit={handleSubmit(onSubmit)} className='flex flex-col h-fit gap-4'>
+					<form onSubmit={handleSubmit(onSubmit)} className='flex flex-col h-fit gap-4 md:pr-[2-rem]'>
 						<div>
 							<Typography as='h2' className='text-secondary-500 font-bold'>
 								Bienvenido/a

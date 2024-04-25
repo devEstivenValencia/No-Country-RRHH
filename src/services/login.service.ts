@@ -30,8 +30,10 @@ export async function loginService(
 		const { data } = await axios.post(APIROUTES.SESSION.LOGIN, encryptCredentials)
 		let { session, user } = data
 
-		user.contact.email = decryptData(decrypter, user.contact.email)
-		user.contact.phone = decryptData(decrypter, user.contact.phone)
+		if (user?.contact) {
+			user.contact.email = decryptData(decrypter, user.contact.email)
+			user.contact.phone = decryptData(decrypter, user.contact.phone)
+		}
 
 		Cookies.set('session', session)
 		localStorage.setItem('user', JSON.stringify(user))
