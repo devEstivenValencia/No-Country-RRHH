@@ -43,9 +43,9 @@ export default function LoginPage() {
 	}
 
 	return (
-		<section className='md:bg-secondary-300 md:min-h-screen flex justify-center items-center py-4'>
-			<div className='flex md:justify-center md:items-center md:shadow-md md:w-[1156px-2rem] md:h-[900px] md:rounded-3xl p-10 md:gap-20 bg-[#ffffff] md:mx-[2rem]'>
-				<figure className='w-[50%] md:max-w-[500px]'>
+		<section className='md:bg-primary-300 md:min-h-screen flex justify-center items-center py-4'>
+			<div className='flex md:justify-center md:items-center md:shadow-md md:w-[1156px-2rem] md:h-[600px]  md:rounded-3xl p-10 md:gap-20 bg-[#ffffff] md:mx-[2rem]'>
+				<figure className='md:w-[50%] md:max-w-[500px]'>
 					<Image
 						src='/images/login-image.png'
 						alt='Imagen Recursos'
@@ -94,7 +94,7 @@ export default function LoginPage() {
 								disabled={isSubmitting}
 								variant='default'
 								type='submit'
-								className='bg-primary-500 text-neutro-50 font-bold h-9 md:w-full md:max-w-[448px] w-72 shadow-md '
+								className='bg-primary-500 text-neutro-50 font-bold h-9 md:w-full md:max-w-[448px] w-full shadow-md '
 							>
 								{isSubmitting ? <Loader /> : 'Iniciar Sesión'}
 							</Button>
