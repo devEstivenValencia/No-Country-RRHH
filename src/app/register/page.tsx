@@ -66,7 +66,7 @@ export default function RegisterPage() {
 				}
 			}
 			await registerService(newEnterprise, keypair, publicPemKey )
-				.then(() => router.push(APPROUTES.DASHBOARD))
+				.then(() => router.push(APPROUTES.ENTERPRISE))
 				.catch(({ message }) => setError('root.server', {message}))
 		}else{
 			setError('root.server', { 'message': error })
