@@ -37,6 +37,7 @@ class SessionController extends Controller
                             $company->toArray(),
                             [
                                 'type' => 'company',
+                                'verified' => $company->verified,
                                 'contact' => [
                                     'email' => CustomEncrypter::encryptOpenSSL($company->contact['email'], $sharedKey),
                                     'phone' => CustomEncrypter::encryptOpenSSL($company->contact['phone_number'], $sharedKey),
