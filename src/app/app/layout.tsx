@@ -33,7 +33,7 @@ export default function Layout ({children} : {children: React.ReactNode}) {
                     <div className="flex w-full h-screen flex-col justify-between">
                         <div className="p-4 gap-4 w-full">
                             <div className="flex flex-col items-center">
-                                <Link href=''>
+                                <Link href={APPROUTES.DASHBOARD}>
                                     <Image
 			        	    	        src='/images/purple-logo-image.png'
 			        	    	        alt='Logo'
