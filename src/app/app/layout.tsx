@@ -31,8 +31,8 @@ export default function Layout ({children} : {children: React.ReactNode}) {
 				</Button>
                 </div>
                 
-                <nav className="hidden md:block">
-                    <div className="flex w-full h-screen flex-col justify-between">
+                <nav className="hidden md:block sticky top-0 left-0 bottom-0">
+                    <div className="flex w-full h-screen flex-col justify-between ">
                         <div className="p-4 gap-4 w-full">
                             <div className="flex flex-col items-center">
                                 <Link href={APPROUTES.DASHBOARD}>
