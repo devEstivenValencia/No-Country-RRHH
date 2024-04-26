@@ -10,7 +10,6 @@ import { Password as PasswordEntity, passwordSchema } from '#/entities'
 import { useRouter } from "next/navigation";
 import { NewEmployee } from "#/entities/NewEmployee.entity";
 import { employeeService } from "#/services/newEmployee.service";
-import { APPROUTES } from "#/config/APP.routes";
 import { sleep } from "#/lib/utils";
 import useSecurity from "#/hooks/useSecurity";
 
@@ -92,6 +91,7 @@ export function EmployeeForm (props: { reset: Function, open: Boolean, setOpen: 
 			await employeeService(newEmployee, keypair, publicPemKey )
             .then(() => {
                 props.reset()
+                handleFormReset()
             })
             .catch(({ message }) => setError('root.server', { message }))
 		}else{
@@ -313,7 +313,7 @@ export function EmployeeForm (props: { reset: Function, open: Boolean, setOpen: 
                             <DialogClose asChild>
                                 <Button type="button" variant='secondary' onClick={handleFormReset} className="border border-red-500 text-red-500 shadow-md hover:bg-red-500 hover:text-neutro-50 md:w-[100px] w-full">Cancelar</Button>
                             </DialogClose>
-                            <Button 
+                            <Button
                                 disabled={isSubmitting}
                                 variant='default'
                                 type="submit" className="bg-green-400 hover:bg-green-500 text-neutro-50 shadow-md md:w-[100px] w-full"

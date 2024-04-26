@@ -6,5 +6,6 @@ export const APPROUTES: KeyWithValue<string> = {
 	LOGIN: '/login',
 	REGISTER: '/register',
 	EMPLOYEES: '/app/employees',
-	ENTERPRISE: '/enterprise'
+	ENTERPRISE: '/enterprise',
+	WORKER: '/worker'
 } as const

@@ -6,7 +6,6 @@ import { credentialsSchema } from './Credentials.entity'
 import { Password } from './Password'
 
 export interface NewEmployee {
-	// companyId: string
 	employee: {
 		name: string
 		dni: string
@@ -30,7 +29,6 @@ export interface NewEmployee {
 }
 
 export const newEmployeeSchema = v.object({
-	// companyId: v.string(),
 	employee: v.object({
 		name: v.string(),
 		dni: v.string(),

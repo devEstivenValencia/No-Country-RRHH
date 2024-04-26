@@ -8,7 +8,7 @@ import Link from "next/link";
 export default function Home() {
 	return (
 		<section className="bg-primary-50 min-h-screen h-full">
-			<nav className="flex justify-between bg-[#FFFFFF] md:h-20 h-24 items-center fixed top-0 left-0 right-0">
+			<nav className="flex justify-between bg-[#FFFFFF] md:h-20 h-24 items-center fixed top-0 left-0 right-0 shadow-md">
 				<Link href={APPROUTES.HOME}>
                     <Image
 			            src='/images/purple-logo-image.png'
