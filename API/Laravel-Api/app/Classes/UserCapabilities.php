@@ -10,7 +10,8 @@ class UserCapabilities
             'update-company',
             'create-employee',
             'update-employee',
-            'Read-employee'
+            'Read-employee',
+            'send-vacation'
         ];
     }
 

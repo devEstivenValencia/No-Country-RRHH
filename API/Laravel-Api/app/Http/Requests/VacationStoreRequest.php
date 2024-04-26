@@ -11,7 +11,7 @@ class VacationStoreRequest extends CustomFormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->tokenCan('send-vacation');
     }
 
     /**
