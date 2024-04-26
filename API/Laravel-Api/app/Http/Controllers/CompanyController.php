@@ -26,6 +26,7 @@ class CompanyController extends Controller
         $company->id = Str::uuid();
         $company->user_id = $user->id;
         $company->company_name = $data['company_name'];
+        $company->verified = false;
         $company->contact = [
             'phone_number' => $data['contact']['phone'],
             'email' => $data['contact']['email']
@@ -50,7 +51,6 @@ class CompanyController extends Controller
         KeyManager::find($request->key_id)->delete();
         return response()->json(
             [
-                'id_key' => 'hola mundo',
                 'session' => $user->createToken('token', UserCapabilities::company(), Carbon::now()->addDays(7))->plainTextToken,
                 'user' => array_merge(
                     $user->toArray(),
@@ -59,7 +59,9 @@ class CompanyController extends Controller
                         'contact' => [
                             'email' => CustomEncrypter::encryptOpenSSL($company->contact['email'], $sharedKey),
                             'phone' => CustomEncrypter::encryptOpenSSL($company->contact['phone_number'], $sharedKey),
-                        ]
+                        ],
+                        'type' => 'company',
+                        'verified' => false
                     ]
                 )
             ],
@@ -71,18 +73,53 @@ class CompanyController extends Controller
     {
         $data = $request->validated();
 
-        $user = Auth::user();
+        $user = User::find(Auth::user()->id);
         $company = $user->company;
 
-        $company->company_name = $data['company_name'];
-        $company->contact = [
-            'phone_number' => $data['contact']['phone'],
-            'email' => $data['contact']['email']
-        ];
-        $company->save();
+        if ($company) {
+            $sharedKey = base64_decode($request->shared_key);
+            KeyManager::find($request->key_id)->delete();
+
+            $company->contact = [
+                'phone_number' => $data['contact']['phone'],
+                'email' => $data['contact']['email']
+            ];
+            $company->location = [
+                'country' => $data['location']['country'],
+                'province' => $data['location']['province'],
+                'city' => $data['location']['city'],
+                'address' => $data['location']['address']
+            ];
+            $company->sector = $data['sector'];
+            $company->verified = true;
+            $company->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'se completo el registro',
+                'user' => array_merge(
+                    $user->toArray(),
+                    $company->toArray(),
+                    [
+                        'contact' => [
+                            'email' => CustomEncrypter::encryptOpenSSL($company->contact['email'], $sharedKey),
+                            'phone' => CustomEncrypter::encryptOpenSSL($company->contact['phone_number'], $sharedKey),
+                        ],
+                        'location' => [
+                            'country' => CustomEncrypter::encryptOpenSSL($company->location['country'], $sharedKey),
+                            'province' => CustomEncrypter::encryptOpenSSL($company->location['province'], $sharedKey),
+                            'city' => CustomEncrypter::encryptOpenSSL($company->location['city'], $sharedKey),
+                            'address' => CustomEncrypter::encryptOpenSSL($company->location['address'], $sharedKey),
+                        ],
+                        'type' => 'company'
+                    ]
+                )
+            ], 200);
+        }
 
         return response()->json([
-            'success' => true
-        ], 200);
+            'error' => 'UNAUTHORIZED',
+            'message' => 'usuario no encontrado'
+        ], 401);
     }
 }

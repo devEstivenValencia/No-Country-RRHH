@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\CustomEncrypter;
+use App\Http\Requests\EmployeeDestroyRequest;
 use App\Http\Requests\EmployeeReadRequest;
 use App\Models\User;
 use App\Models\Company;
@@ -23,17 +25,34 @@ class EmployeeController extends Controller
         $company = Company::where('user_id', Auth::user()->id)->first();
 
         if ($company) {
+            $key = KeyManager::find($request->query('key_id'));
+            $sharedKey = base64_decode($key->key);
+            $key->delete();
 
             $employees = $company->employees()->get();
 
             $employeesData = [];
             foreach ($employees as $employee) {
+
                 $employeesData[] = [
-                    'employee_id' => $employee->id,
+                    'id' => $employee->user_id,
                     'name' => $employee->name,
-                    'dni' => $employee->id_legal,
-                    "address" => $employee->address,
-                    "contact" => $employee->contact,
+                    'dni' => CustomEncrypter::encryptOpenSSL($employee->id_legal, $sharedKey),
+                    "location" => [
+                        'country' => CustomEncrypter::encryptOpenSSL($employee->address['country'], $sharedKey),
+                        'province' => CustomEncrypter::encryptOpenSSL($employee->address['province'], $sharedKey),
+                        'city' => CustomEncrypter::encryptOpenSSL($employee->address['city'], $sharedKey),
+                        'address' => CustomEncrypter::encryptOpenSSL($employee->address['address'], $sharedKey),
+                    ],
+                    "contact" =>  [
+                        'email' => CustomEncrypter::encryptOpenSSL($employee->contact['email'], $sharedKey),
+                        'phone' => CustomEncrypter::encryptOpenSSL($employee->contact['phone'], $sharedKey),
+                    ],
+                    "admissionDate" => $employee->admission_date,
+                    "finishDate" => $employee->finish_date,
+                    "state" => $employee->state,
+                    "role" => $employee->role,
+                    "type" => 'employee'
                 ];
             }
 
@@ -104,8 +123,37 @@ class EmployeeController extends Controller
             $employee->role = $dataEmployee['role'];
             $employee->save();
 
-            return response()->json(['success' => true], 200);
+            return response()->json([
+                'success' => true,
+                'message' => 'empleado modificado'
+            ], 200);
         }
-        return response()->json(['error' => 'BAD_REQUEST'], 400);
+        return response()->json([
+            'error' => 'BAD_REQUEST',
+            'message' => 'empleado no encontrado'
+        ], 400);
+    }
+
+    public function destroy(EmployeeDestroyRequest $request): JsonResponse
+    {
+        $data = $request->validated();
+        $company = Company::where('user_id', '=', Auth::user()->id)->first();
+        $employee = Employee::where('company_id', '=', $company->id)
+            ->where('user_id', '=', $data['employee_id'])->first();
+
+        if ($employee) {
+            $user = User::find($employee->user_id);
+            $employee->delete();
+            $user->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'empleado borrado'
+            ], 200);
+        }
+        return response()->json([
+            'error' => 'BAD_REQUEST',
+            'message' => $data['employee_id']
+        ], 400);
     }
 }
