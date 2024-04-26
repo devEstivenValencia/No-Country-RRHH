@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\VacationIndexRequest;
+use App\Http\Requests\VacationStoreRequest;
 use App\Models\Company;
+use App\Models\Employee;
+use App\Models\Vacation;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class VacationController extends Controller
 {
@@ -33,19 +36,7 @@ class VacationController extends Controller
                     'name' => $employee->name,
                     'email' => $employee->contact['email'],
                     'role' => $employee->role,
-                    "dates" => '20-20-2024 > 30-30-2024'/* $vacation->initial_date . ' > ' . $vacation->final_date */
-                    /* 
-                        'dni' => CustomEncrypter::encryptOpenSSL($employee->id_legal, $sharedKey),
-                        "location" => [
-                            'country' => CustomEncrypter::encryptOpenSSL($employee->address['country'], $sharedKey),
-                            'province' => CustomEncrypter::encryptOpenSSL($employee->address['province'], $sharedKey),
-                            'city' => CustomEncrypter::encryptOpenSSL($employee->address['city'], $sharedKey),
-                            'address' => CustomEncrypter::encryptOpenSSL($employee->address['address'], $sharedKey),
-                        ],
-                        "contact" =>  [
-                            'email' => CustomEncrypter::encryptOpenSSL($employee->contact['email'], $sharedKey),
-                            'phone' => CustomEncrypter::encryptOpenSSL($employee->contact['phone'], $sharedKey),
-                        ], */
+                    "dates" => '20-20-2024 > 30-30-2024'
                 ];
                 //}
             }
@@ -59,4 +50,19 @@ class VacationController extends Controller
             return response()->json(['message' => 'No se encontró la compañía asociada al usuario.'], 404);
         }
     }
+
+    public function store(VacationStoreRequest $request): JsonResponse
+    {
+        $data = $request->validated();
+        $employee = Employee::where('user_id', Auth::user()->id)->first();
+        $vacation = new Vacation();
+        $vacation->id = Str::uuid(36);
+        $vacation->employee_id = $employee->id;
+        $vacation->initial_date = $data['initial_date'];
+        $vacation->initial_date = $data['final_date'];
+        $vacation->comments = $data['comments'];
+        $vacation->state = $data['state'];
+        return response()->json(['success' => true], 200);
+    }
+    //
 }

@@ -32,6 +32,7 @@ Route::post('enterprise/employee/create', [EmployeeController::class, 'store'])-
 Route::put('enterprise/employee/modify', [EmployeeController::class, 'update'])->middleware('auth:sanctum');
 Route::delete('enterprise/employee/delete', [EmployeeController::class, 'destroy'])->middleware('auth:sanctum');
 
+Route::post('enterprise/employee/vacation/create', [VacationController::class, 'store'])->middleware('auth:sanctum');
 Route::get('enterprise/vacations', [VacationController::class, 'index'])->middleware('auth:sanctum');
 
 Route::post('encrypt', [EncryptController::class, 'encrypt_data']);

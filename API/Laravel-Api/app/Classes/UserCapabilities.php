@@ -13,6 +13,7 @@ class UserCapabilities
             'read-employee',
             'delete-employee',
             'get-all-vacations',
+            'send-vacation'
         ];
     }
 
