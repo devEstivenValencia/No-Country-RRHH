@@ -17,8 +17,7 @@ function useBroadcastNewVacation() {
 
 			const channel = pusher.subscribe('new-vacation')
 			channel.bind(userId, function (data: string) {
-				/* 
-				alert(JSON.stringify(data)) */
+				alert(JSON.stringify(vacation + 1))
 				setVacation(vacation + 1)
 			})
 

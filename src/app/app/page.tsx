@@ -11,10 +11,11 @@ import { VacationEmployee } from "#/entities/VacationEmployee.entity";
 import { getVacationEmployeesService } from "#/services";
 import useSecurity from "#/hooks/useSecurity";
 import { sleep } from "#/lib/utils";
+import Pusher from 'pusher-js'
+import * as PusherTypes from 'pusher-js'
 
 export default function App() {
 	const { error, keypairCreated, keypair, publicPemKey } = useSecurity();
-    const [newVacation, setNewVacation] = useBroadcastNewVacation()
     const [vacations, setVacations] = useState<VacationEmployee[]>([])
     const [clickAccions, setClickAccions] = useState(true);
     const [loading, setLoading] = useState(true);
@@ -22,6 +23,28 @@ export default function App() {
     const [userLoading,setUserLoading] = useState(false);
     const handleClickAccions = () => setClickAccions(!clickAccions);
 	const router = useRouter()
+	const [vacation, setVacation] = useState<string>('')
+
+	useEffect(() => {
+		const user = JSON.parse(localStorage.getItem('user') || '{}')
+		if (user?.type === 'company') {
+			console.log('registrandose')
+			const userId = user.id
+
+			const pusher = new Pusher('30dc5d26e21ba3445b18', {
+				cluster: 'us2'
+			})
+
+			const channel = pusher.subscribe('new-vacation')
+			channel.bind(userId, function (data: string) {
+				setVacation(data)
+			})
+
+			return () => {
+				pusher.unsubscribe('new-vacation')
+			}
+		}
+	}, [])
 
     useEffect(()=>{
         const user = JSON.parse(localStorage.getItem('user') || '{}')
@@ -36,7 +59,7 @@ export default function App() {
 
     useEffect(() => {
         fetchEmployees()
-    }, [keypairCreated,newVacation]);
+    }, [keypairCreated,vacation]);
 
     async function fetchEmployees(){
         console.log('cargando empleados 2')

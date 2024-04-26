@@ -1,5 +1,6 @@
 'use client'
 
+import Script from 'next/script'
 import { Icon, Typography } from "#/components";
 import { APPROUTES } from "#/config/APP.routes";
 import Image from "next/image";
@@ -12,8 +13,6 @@ import { useState } from "react";
 import { SendVacationService } from "#/services";
 
 export default function worker () {
-    const [initialDate,setInitialDate] = useState<string>('')
-    const [finalDate,setFinalDate] = useState<string>('')
 
     const router = useRouter()
     function onClick(){
@@ -23,9 +22,11 @@ export default function worker () {
     }
 
     async function sendForm(){
-            await SendVacationService(initialDate,finalDate)
-                .then((data) => {})
-                .catch(({ message }) => console.log(message))
+        let initialDate = document.getElementById('initial-date')?.getAttribute('value') || ''
+        let finalDate = document.getElementById('final-date')?.getAttribute('value') || ''
+        await SendVacationService(initialDate.split("/").reverse().join("-"),finalDate.split("/").reverse().join("-"))
+            .then((data) => {})
+            .catch(({ message }) => console.log(message))
     }
     
     return (
@@ -59,10 +60,11 @@ export default function worker () {
             
             <section className="flex flex-col justify-center items-center mt-10">
                 <div className="bg-[#FFFFFF] md:min-w-[900px] md:min-h-[500px] rounded-3xl shadow-md">
-                    contenido
-                    <Button>Enviar</Button>
+                    <div id="calendario"></div>
+                    <Button onClick={()=>sendForm()}>Enviar</Button>
                 </div>
             </section>
+            <Script src="http://no-country-rrhh.work.gd/calendario.js" />
         </section>
     )
 }
