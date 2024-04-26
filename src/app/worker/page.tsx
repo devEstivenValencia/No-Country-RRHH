@@ -8,14 +8,24 @@ import { Button } from "#/components";
 import Cookies from 'js-cookie'
 import { useRouter } from "next/navigation";
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "#/components/ui/dialog";
+import { useState } from "react";
+import { SendVacationService } from "#/services";
 
 export default function worker () {
+    const [initialDate,setInitialDate] = useState<string>('')
+    const [finalDate,setFinalDate] = useState<string>('')
 
     const router = useRouter()
     function onClick(){
 		Cookies.remove('session')
 		localStorage.removeItem('user')
         router.push(APPROUTES.LOGIN)
+    }
+
+    async function sendForm(){
+            await SendVacationService(initialDate,finalDate)
+                .then((data) => {})
+                .catch(({ message }) => console.log(message))
     }
     
     return (
@@ -50,6 +60,7 @@ export default function worker () {
             <section className="flex flex-col justify-center items-center mt-10">
                 <div className="bg-[#FFFFFF] md:min-w-[900px] md:min-h-[500px] rounded-3xl shadow-md">
                     contenido
+                    <Button>Enviar</Button>
                 </div>
             </section>
         </section>

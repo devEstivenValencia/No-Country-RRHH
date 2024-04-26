@@ -35,7 +35,14 @@ export default function LoginPage() {
 		}
 		if(keypairCreated && publicPemKey){
 			await loginService(credentials, keypair, publicPemKey )
-				.then(() => router.push(APPROUTES.DASHBOARD))
+				.then(() => {
+					const user = JSON.parse(localStorage.getItem('user') || '{}')
+					if (user?.type == 'employee'){
+						router.push(APPROUTES.WORKER)
+					}else{
+						router.push(APPROUTES.DASHBOARD)
+					}
+				})
 				.catch(({ message }) => setError('root.server', {message}))
 		}else{
 			setError('root.server', { 'message': error })
