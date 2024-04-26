@@ -12,6 +12,8 @@ import { emailSchema } from "#/schemas";
 import { CompleteEnterprise } from "#/entities/CompleteEnterprise.entity";
 import { completeEnterpriseService } from "#/services/completeEnterprise.service";
 import { useState } from "react";
+import { sleep } from "#/lib/utils";
+import useSecurity from "#/hooks/useSecurity";
 
 const defaultValues = {
     sector: '',
@@ -40,6 +42,7 @@ const formCompleteEnterpriseSchema = v.object({
 })
 
 export function EnterpriseForm () { 
+	const { error, keypairCreated, keypair, publicPemKey } = useSecurity();
 
     const router = useRouter()
 
@@ -73,24 +76,43 @@ export function EnterpriseForm () {
     } = form
 
     async function onSubmit(values: CompleteEnterpriseValues) {
-        const completeEnterprise: CompleteEnterprise = {
-            location: { 
-                country: values.country,
-                province: values.province,
-                city: values.city,
-                zipcode: values.zipcode,
-                address: values.address
-            },
-            contact: {
-                email: values.email,
-                phone: values.phone
-            },
-            role: values.role,
-            sector: values.sector
-        } 
-        await completeEnterpriseService(completeEnterprise)
-            .then(() => router.push(APPROUTES.DASHBOARD))
-            .catch(({ message }) => setError('root.server', { message }))
+
+        while(!error && !keypairCreated){
+            await sleep(100)
+        }
+
+        if(keypairCreated && publicPemKey){
+            const completeEnterprise: CompleteEnterprise = {
+                location: { 
+                    country: values.country,
+                    province: values.province,
+                    city: values.city,
+                    zipcode: values.zipcode,
+                    address: values.address
+                },
+                contact: {
+                    email: values.email,
+                    phone: values.phone
+                },
+                role: values.role,
+                sector: values.sector
+            }
+    
+            let workingWeek: string[] = []
+            if(!monday) workingWeek.push('lu')
+            if(!tuesday) workingWeek.push('ma')
+            if(!wednesday) workingWeek.push('mi')
+            if(!thursday) workingWeek.push('ju')
+            if(!friday) workingWeek.push('vi')
+            if(!saturday) workingWeek.push('sa')
+            if(!sunday) workingWeek.push('do')
+            
+            await completeEnterpriseService(completeEnterprise, workingWeek, keypair, publicPemKey )
+                .then(() => router.push(APPROUTES.DASHBOARD))
+                .catch(({ message }) => setError('root.server', {message}))
+        }else{
+            setError('root.server', { 'message': error })
+        }
     }
 
     return (
@@ -138,25 +160,25 @@ export function EnterpriseForm () {
                                 <Typography as="span" className="text-sm font-semibold">Días laborales</Typography>
                                 <div className="flex gap-3">
                                     <div onClick={handleMonday}>
-                                        {monday ? <Button className="p-1 w-8 rounded-full font-normal bg-neutro-200">LU</Button> : <Button className="p-1 w-8 rounded-full font-normal bg-primary-300">LU</Button>}
+                                        {monday ? <Button type="button" className="p-1 w-8 rounded-full font-normal bg-neutro-200">LU</Button> : <Button type="button" className="p-1 w-8 rounded-full font-normal bg-primary-300">LU</Button>}
                                     </div>
                                     <div onClick={handleTuesday}>
-                                        {tuesday ? <Button className="p-1 w-8 rounded-full font-normal bg-neutro-200">MA</Button> : <Button className="p-1 w-8 rounded-full font-normal bg-primary-300">MA</Button>}
+                                        {tuesday ? <Button type="button" className="p-1 w-8 rounded-full font-normal bg-neutro-200">MA</Button> : <Button type="button" className="p-1 w-8 rounded-full font-normal bg-primary-300">MA</Button>}
                                     </div>
                                     <div onClick={handleWednesday}>
-                                        {wednesday ? <Button className="p-1 w-8 rounded-full font-normal bg-neutro-200">MI</Button> : <Button className="p-1 w-8 rounded-full font-normal bg-primary-300">MI</Button>}
+                                        {wednesday ? <Button type="button" className="p-1 w-8 rounded-full font-normal bg-neutro-200">MI</Button> : <Button type="button" className="p-1 w-8 rounded-full font-normal bg-primary-300">MI</Button>}
                                     </div>
                                     <div onClick={handleThursday}>
-                                        {thursday ? <Button className="p-1 w-8 rounded-full font-normal bg-neutro-200">JU</Button> : <Button className="p-1 w-8 rounded-full font-normal bg-primary-300">JU</Button>}
+                                        {thursday ? <Button type="button" className="p-1 w-8 rounded-full font-normal bg-neutro-200">JU</Button> : <Button type="button" className="p-1 w-8 rounded-full font-normal bg-primary-300">JU</Button>}
                                     </div>
                                     <div onClick={handleFriday}>
-                                        {friday ? <Button className="p-1 w-8 rounded-full font-normal bg-neutro-200">VI</Button> : <Button className="p-1 w-8 rounded-full font-normal bg-primary-300">VI</Button>}
+                                        {friday ? <Button type="button" className="p-1 w-8 rounded-full font-normal bg-neutro-200">VI</Button> : <Button type="button" className="p-1 w-8 rounded-full font-normal bg-primary-300">VI</Button>}
                                     </div>
                                     <div onClick={handleSaturday}>
-                                        {saturday ? <Button className="p-1 w-8 rounded-full font-normal bg-neutro-200">SA</Button> : <Button className="p-1 w-8 rounded-full font-normal bg-primary-300">SA</Button>}
+                                        {saturday ? <Button type="button" className="p-1 w-8 rounded-full font-normal bg-neutro-200">SA</Button> : <Button type="button" className="p-1 w-8 rounded-full font-normal bg-primary-300">SA</Button>}
                                     </div>
                                     <div onClick={handleSunday}>
-                                        {sunday ? <Button className="p-1 w-8 rounded-full font-normal bg-neutro-200">DO</Button> : <Button className="p-1 w-8 rounded-full font-normal bg-primary-300">DO</Button>}
+                                        {sunday ? <Button type="button" className="p-1 w-8 rounded-full font-normal bg-neutro-200">DO</Button> : <Button type="button" className="p-1 w-8 rounded-full font-normal bg-primary-300">DO</Button>}
                                     </div>
                                 </div>
                                 <Typography as="span" className="text-sm text-neutro-800 mb-3">Seleccione el rango de día laborales</Typography>
