@@ -13,12 +13,13 @@ class UserCapabilities
             'read-employee',
             'delete-employee',
             'get-all-vacations',
-            'send-vacation'
         ];
     }
 
     static public function employee(): array
     {
-        return [];
+        return [
+            'send-vacation'
+        ];
     }
 }

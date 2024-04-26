@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\CustomAlert;
 use App\Http\Requests\VacationIndexRequest;
 use App\Http\Requests\VacationStoreRequest;
 use App\Models\Company;
@@ -28,17 +29,17 @@ class VacationController extends Controller
 
             $employeesData = [];
             foreach ($employees as $employee) {
-                $vacation = $employee->vacation;
+                $vacation = Vacation::where('employee_id', '=', $employee->id)->first();
 
-                //if ($vacation) {
-                $employeesData[] = [
-                    'id' => $employee->user_id,
-                    'name' => $employee->name,
-                    'email' => $employee->contact['email'],
-                    'role' => $employee->role,
-                    "dates" => '20-20-2024 > 30-30-2024'
-                ];
-                //}
+                if ($vacation) {
+                    $employeesData[] = [
+                        'id' => $employee->user_id,
+                        'name' => $employee->name,
+                        'email' => $employee->contact['email'],
+                        'role' => $employee->role,
+                        "dates" => $vacation->initial_date . ' > ' . $vacation->final_date
+                    ];
+                }
             }
 
             $response = [
@@ -54,14 +55,27 @@ class VacationController extends Controller
     public function store(VacationStoreRequest $request): JsonResponse
     {
         $data = $request->validated();
-        $employee = Employee::where('user_id', Auth::user()->id)->first();
+        $employee = Employee::where('user_id', '=', Auth::user()->id)->first();
+
+
+        $vacation = Vacation::where('employee_id', '=', $employee->id)->first();
+        if ($vacation) $vacation->delete();
+
         $vacation = new Vacation();
         $vacation->id = Str::uuid(36);
         $vacation->employee_id = $employee->id;
         $vacation->initial_date = $data['initial_date'];
-        $vacation->initial_date = $data['final_date'];
-        $vacation->comments = $data['comments'];
-        $vacation->state = $data['state'];
+        $vacation->final_date = $data['final_date'];
+        $vacation->state = 'approved';
+        $vacation->created_at = now();
+        $vacation->save();
+
+        event(new CustomAlert(
+            $employee->company_id,
+            Str::uuid(36),
+            'new-vacation'
+        ));
+
         return response()->json(['success' => true], 200);
     }
     //

@@ -22,8 +22,8 @@ class VacationStoreRequest extends CustomFormRequest
     public function rules(): array
     {
         return [
-            'initial_date' => 'required|date',
-            'final_date' => 'required|date',
+            'initial_date' => 'required',
+            'final_date' => 'required',
 
         ];
     }
@@ -32,9 +32,7 @@ class VacationStoreRequest extends CustomFormRequest
     {
         return [
             'initial_date.required' => 'La fecha de inicio de las vacaciones son requeridas',
-            'initial_date.date' => 'formato de inicio vacaciones no valido',
             'final_date.required' => 'La fecha de finalización de las vacaciones son requeridas',
-            'final_date.date' => 'Formato de finalización de vacaciones no valido'
         ];
     }
 }
