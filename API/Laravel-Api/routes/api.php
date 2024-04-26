@@ -5,6 +5,7 @@ use App\Http\Controllers\Employee;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EncryptController;
 use App\Http\Controllers\SessionController;
+use App\Http\Controllers\VacationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +31,8 @@ Route::get('enterprise/employee', [EmployeeController::class, 'index'])->middlew
 Route::post('enterprise/employee/create', [EmployeeController::class, 'store'])->middleware('auth:sanctum');
 Route::put('enterprise/employee/modify', [EmployeeController::class, 'update'])->middleware('auth:sanctum');
 Route::delete('enterprise/employee/delete', [EmployeeController::class, 'destroy'])->middleware('auth:sanctum');
+
+Route::get('enterprise/vacations', [VacationController::class, 'index'])->middleware('auth:sanctum');
 
 Route::post('encrypt', [EncryptController::class, 'encrypt_data']);
 

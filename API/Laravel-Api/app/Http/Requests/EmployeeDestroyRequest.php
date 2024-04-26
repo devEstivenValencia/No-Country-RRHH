@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class EmployeeDestroyRequest extends FormRequest
+class EmployeeDestroyRequest extends CustomFormRequest
 {
     public function authorize(): bool
     {

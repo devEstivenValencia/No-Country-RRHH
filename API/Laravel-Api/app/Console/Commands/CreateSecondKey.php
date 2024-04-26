@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Classes\CustomAlert;
 use Illuminate\Console\Command;
 
 class CreateSecondKey extends Command
@@ -25,9 +26,16 @@ class CreateSecondKey extends Command
      */
     public function handle()
     {
-        $rand = random_bytes(32);
+        /* $rand = random_bytes(32);
         $key = base64_encode($rand);
-        $this->putPermanentEnv("SECOND_KEY", $key);
+        $this->putPermanentEnv("SECOND_KEY", $key); *//* 
+        event(new MyEvent('hello world')); *//* 
+        new TestPushNotification('84d62612-a464-4f67-b443-75606d49e0fb', 'someone comment on your post'); */
+        event(new CustomAlert(
+            "e3d73cc3-1e33-4df1-a9ec-2d35fc05f976",
+            'hello world',
+            'new-vacation'
+        ));
     }
 
     private function putPermanentEnv($key, $value)

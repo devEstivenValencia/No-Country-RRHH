@@ -11,7 +11,8 @@ class UserCapabilities
             'create-employee',
             'update-employee',
             'read-employee',
-            'delete-employee'
+            'delete-employee',
+            'get-all-vacations',
         ];
     }
 
