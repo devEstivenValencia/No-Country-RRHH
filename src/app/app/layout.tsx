@@ -7,6 +7,8 @@ import Link from "next/link";
 import { useState } from "react";
 import Cookies from 'js-cookie'
 import { useRouter } from "next/navigation";
+import { Dialog } from "@radix-ui/react-dialog";
+import { DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "#/components/ui/dialog";
 
 export default function Layout ({children} : {children: React.ReactNode}) {
 
@@ -67,10 +69,19 @@ export default function Layout ({children} : {children: React.ReactNode}) {
                                     <Link href=''>Configuración</Link>
                                 </li>
                                 <li>
-                                    <Button onClick={onClick} className='hover:bg-primary-50 text-neutro-950 font-normal w-full h-10 p-2 gap-3 text-base rounded-md justify-start md:w-52'>
-                                        <Icon name="sign-out-alt"></Icon>
-                                        Cerrar sesión
-			        				</Button>
+                                    <Dialog>
+                                        <DialogTrigger className="flex hover:bg-primary-50 text-neutro-950 font-normal w-full h-10 p-2 gap-3 text-base rounded-md justify-start md:w-52">
+                                            <Icon name="sign-out-alt"></Icon>
+                                            Cerrar sesión
+                                        </DialogTrigger>
+                                        <DialogContent className="bg-[#FFFFFF] border-red-500 rounded-3xl">
+                                                <DialogTitle className="text-neutro-800">Estás a punto de cerrar sesión...</DialogTitle>
+                                                <DialogDescription className="text-neutro-800">¿Quieres seguir adelante con esta acción?</DialogDescription>
+                                                <Button onClick={onClick} className='border border-red-500 text-red-500 hover:bg-red-500 hover:text-neutro-50 rounded-3xl'>
+                                                    Aceptar
+                                                </Button>
+                                        </DialogContent>
+                                    </Dialog>
                                 </li>
                             </ul>
                         </div>
@@ -111,10 +122,19 @@ export default function Layout ({children} : {children: React.ReactNode}) {
                                     <Link href=''>Configuración</Link>
                                 </li>
                                 <li>
-                                    <Button className='hover:bg-primary-50 w-full h-10 p-2 gap-3 text-base font-normal rounded-md justify-start md:w-52'>
-                                        <Icon name="sign-out-alt"></Icon>
-                                        Cerrar sesión
-			        				</Button>
+                                    <Dialog>
+                                        <DialogTrigger className="flex hover:bg-primary-50 text-neutro-950 font-normal w-full h-10 p-2 gap-3 text-base rounded-md justify-start md:w-52">
+                                            <Icon name="sign-out-alt"></Icon>
+                                            Cerrar sesión
+                                        </DialogTrigger>
+                                        <DialogContent className="bg-[#FFFFFF] border-red-500 rounded-3xl">
+                                                <DialogTitle className="text-neutro-800">Estás a punto de cerrar sesión...</DialogTitle>
+                                                <DialogDescription className="text-neutro-800">¿Quieres seguir adelante con esta acción?</DialogDescription>
+                                                <Button onClick={onClick} className='border border-red-500 text-red-500 hover:bg-red-500 hover:text-neutro-50 rounded-3xl'>
+                                                    Aceptar
+                                                </Button>
+                                        </DialogContent>
+                                    </Dialog>
                                 </li>
                             </ul>
                         </div>

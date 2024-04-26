@@ -65,14 +65,13 @@ export default function Employees () {
             <nav className="md:bg-[#FFFFFF] md:h-20 md:rounded-3xl md:m-8 md:shadow-md md:justify-between md:px-10 flex justify-center mt-16 items-center">
                 <Typography as='h3' className="text-primary-500 font-semibold ml-3">Empleados</Typography>
                 <div className="flex items-center">
-                    <Button className="bg-primary-50 hover:text-primary-500 text-neutro-950 rounded-3xl hidden md:block">
+                    <Button className="text-neutro-800 hover:text-primary-500 rounded-3xl hidden md:block">
                         <Icon name="bell"></Icon>
                     </Button>
                     <Button className="relative bottom-16 ml-5 md:static">
-                        <Avatar>
-                            <AvatarImage src="https://github.com/shadcn.png" />
-                            <AvatarFallback>JL</AvatarFallback>
-                        </Avatar>
+                        <div className="bg-neutro-200 p-2 rounded-full mr-1 text-neutro-800">
+                            <Icon name="user"></Icon>
+                        </div>
                         <div className="text-left pl-2">
                             <Typography as='p' className="font-bold text-neutro-950">Joseph Leon</Typography>
                             <Typography as='p' className="text-neutro-500 font-bold text-xs">Recursos Humanos</Typography>

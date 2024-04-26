@@ -10,7 +10,6 @@ import { Password as PasswordEntity, passwordSchema } from '#/entities'
 import { useRouter } from "next/navigation";
 import { NewEmployee } from "#/entities/NewEmployee.entity";
 import { employeeService } from "#/services/newEmployee.service";
-import { APPROUTES } from "#/config/APP.routes";
 import { sleep } from "#/lib/utils";
 import useSecurity from "#/hooks/useSecurity";
 
