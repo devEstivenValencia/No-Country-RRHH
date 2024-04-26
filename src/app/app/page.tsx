@@ -1,7 +1,6 @@
 'use client'
 
 import { Button, Icon, Typography } from "#/components";
-import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "#/components/ui/table";
 import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle } from "#/components/ui/card";

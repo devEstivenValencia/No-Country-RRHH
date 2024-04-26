@@ -1,7 +1,6 @@
 'use client'
 
 import { Button, Icon, Input, Typography } from "#/components";
-import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "#/components/ui/table"
 import { useEffect, useState } from "react"
 import { EmployeeForm } from "#/components/Employees/EmployeeForm.component";
@@ -9,12 +8,17 @@ import useSecurity from "#/hooks/useSecurity";
 import { Employee } from "#/entities/Employee.entity";
 import { getEmployeesService } from "#/services/getEmployees.service";
 import { deleteEmployeeService } from "#/services";
+import { APPROUTES } from "#/config/APP.routes";
+import { useRouter } from "next/navigation";
 
 export default function Employees () {
 	const { error, keypairCreated, keypair, publicPemKey } = useSecurity();
     const [loading, setLoading] = useState<boolean>(true)
     const [employees, setEmployees] = useState<Employee[]>([])
     const [errorFetch, setErrorFetch] = useState<string>('')
+    const [user,setUser] = useState();
+    const [userLoading,setUserLoading] = useState(false);
+    const router = useRouter()
 
     const [open, setOpen] = useState<boolean>(false)
 
@@ -60,6 +64,17 @@ export default function Employees () {
         fetchEmployees()
     }
 
+    useEffect(()=>{
+        const user = JSON.parse(localStorage.getItem('user') || '{}')
+        console.log('user ', user)
+        if (user?.type === 'company' && !user.verified)
+            router.push(APPROUTES.ENTERPRISE)
+        if(!userLoading){
+            setUser(user)
+            setUserLoading(true)
+        }
+    },[])
+
     return (
         <section className="bg-primary-50 min-h-screen h-full w-full flex flex-col pt-2">
             <nav className="md:bg-[#FFFFFF] md:h-20 md:rounded-3xl md:m-8 md:shadow-md md:justify-between md:px-10 flex justify-center mt-16 items-center">
@@ -73,7 +88,7 @@ export default function Employees () {
                             <Icon name="user"></Icon>
                         </div>
                         <div className="text-left pl-2">
-                            <Typography as='p' className="font-bold text-neutro-950">Joseph Leon</Typography>
+                            <Typography as='p' className="font-bold text-neutro-950">{user && user?.company_name}</Typography>
                             <Typography as='p' className="text-neutro-500 font-bold text-xs">Recursos Humanos</Typography>
                         </div>
                     </Button>
@@ -114,7 +129,7 @@ export default function Employees () {
                                             <Button onClick={ () => editEmployee(emp.id) } className="p-1 text-yellow-200 hover:text-yellow-500">
                                                 <Icon name="edit"></Icon>
                                             </Button>
-                                            <Button onClick={ () => deleteEmployee(emp.id) } className="p-1 text-red-300 hover:text-red-500">
+                                            <Button onClick={ () => deleteEmployee(emp.id)} className="p-1 text-red-300 hover:text-red-500">
                                                 <Icon name="trash"></Icon>
                                             </Button>
                                         </div>
