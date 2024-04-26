@@ -1,3 +1,5 @@
+'use client'
+
 import { pki } from 'node-forge'
 import { useEffect, useState } from 'react'
 
@@ -9,20 +11,21 @@ function useSecurity() {
 	const [error, setError] = useState<string>('')
 
 	useEffect(() => {
-		generateKeyPair(0)
-	}, [])
-
-	function generateKeyPair(intent: number) {
-		if (intent < 3) {
+		window.setTimeout(() => {
 			pki.rsa.generateKeyPair({ bits: 2048, workers: 2 }, (err: Error, key: pki.rsa.KeyPair) => {
 				if (!err) {
 					setKeypair(key)
 					setPublicPemKey(pki.publicKeyToPem(key.publicKey))
 					setKeypairCreated(true)
 				} else {
-					generateKeyPair(intent++)
+					setError('error al crear key')
 				}
 			})
+		}, 100)
+	}, [])
+
+	function generateKeyPair(intent: number) {
+		if (intent < 3) {
 		} else {
 			setError('the key pair could not be created')
 		}

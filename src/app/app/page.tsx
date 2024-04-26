@@ -7,10 +7,19 @@ import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle } from "#/components/ui/card";
 import { useRouter } from "next/navigation";
 import { APPROUTES } from "#/config/APP.routes";
+import useBroadcastNewVacation from "#/hooks/useBroadcastNewVacation";
+import { VacationEmployee } from "#/entities/VacationEmployee.entity";
+import { getVacationEmployeesService } from "#/services";
+import useSecurity from "#/hooks/useSecurity";
+import { sleep } from "#/lib/utils";
 
 export default function App() {
+	const { error, keypairCreated, keypair, publicPemKey } = useSecurity();
+    const [newVacation, setNewVacation] = useBroadcastNewVacation()
+    const [vacations, setVacations] = useState<VacationEmployee[]>([])
     const [clickAccions, setClickAccions] = useState(true);
-    const [user,setUser] = useState();
+    const [loading, setLoading] = useState(true);
+    const [user,setUser] = useState<any>();
     const [userLoading,setUserLoading] = useState(false);
     const handleClickAccions = () => setClickAccions(!clickAccions);
 	const router = useRouter()
@@ -25,6 +34,24 @@ export default function App() {
             setUserLoading(true)
         }
     },[])
+
+    useEffect(() => {
+        fetchEmployees()
+    }, [keypairCreated,newVacation]);
+
+    async function fetchEmployees(){
+        console.log('cargando empleados 2')
+        if(keypairCreated && publicPemKey){
+            console.log('await')
+            await getVacationEmployeesService(keypair, publicPemKey )
+                .then((data) => setVacations(data.employees))
+                .catch(({ message }) => console.log(message))
+                .finally(() => setLoading(false))
+        }else{/* 
+            setErrorFetch(error) */
+            console.log(error)
+        }
+    }
 
     // Datos simulados
     const totalEmployees = 32;
@@ -79,29 +106,33 @@ export default function App() {
                             <TableHead>Nombre</TableHead>
                             <TableHead>Correo Electrónico</TableHead>
                             <TableHead>Rol</TableHead>
-                            <TableHead>Código del empleado</TableHead>
+                            <TableHead>fechas</TableHead>
                             <TableHead className="text-right">Acciones</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        <TableRow className="border-b-neutro-300 h-12">
-                            <TableCell>Hector Laguna</TableCell>
-                            <TableCell>hector.l@gmail.com</TableCell>
-                            <TableCell>Arquitecto</TableCell>
-                            <TableCell>A523684</TableCell>
-                            <TableCell onClick={handleClickAccions} className="flex justify-end">
-                                {clickAccions ? <Button className="w-16"><Icon name="menu-dots-vertical"></Icon></Button> :
-                                    <div className="rounded-md shadow-md flex w-16">
-                                        <Button className="p-1 text-green-300 hover:text-neutro-50 hover:bg-green-500">
-                                            <Icon name="check"></Icon>
-                                        </Button>
-                                        <Button className="p-1 text-red-300 hover:text-neutro-50 hover:bg-red-500">
-                                            <Icon name="cross-small"></Icon>
-                                        </Button>
-                                    </div>
-                                }
-                            </TableCell>
-                        </TableRow>
+                        { vacations.map(( e: VacationEmployee ) => {
+                            return (
+                                <TableRow key={e.id} className="border-b-neutro-300 h-12">
+                                <TableCell>{e.name}</TableCell>
+                                <TableCell>{e.email}</TableCell>
+                                <TableCell>{e.role}</TableCell>
+                                <TableCell>{e.dates}</TableCell>
+                                <TableCell onClick={handleClickAccions} className="flex justify-end">
+                                    {clickAccions ? <Button className="w-16"><Icon name="menu-dots-vertical"></Icon></Button> :
+                                        <div className="rounded-md shadow-md flex w-16">
+                                            <Button className="p-1 text-green-300 hover:text-neutro-50 hover:bg-green-500">
+                                                <Icon name="check"></Icon>
+                                            </Button>
+                                            <Button className="p-1 text-red-300 hover:text-neutro-50 hover:bg-red-500">
+                                                <Icon name="cross-small"></Icon>
+                                            </Button>
+                                        </div>
+                                    }
+                                </TableCell>
+                            </TableRow>
+                            )
+                        })}
                     </TableBody>
                 </Table>
             </div>

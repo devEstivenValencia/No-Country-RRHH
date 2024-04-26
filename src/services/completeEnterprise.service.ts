@@ -21,7 +21,7 @@ export async function completeEnterpriseService(
 	const { location, contact } = completeEnterprise
 
 	try {
-		const { encrypter, decrypter, key_id } = await encryptkeyService(keypair, publicPemKey)
+		const { encrypter, decrypter, keyId } = await encryptkeyService(keypair, publicPemKey)
 
 		const encryptLocation = {
 			country: encryptData(encrypter, location.country),
@@ -47,7 +47,7 @@ export async function completeEnterpriseService(
 		const { data } = await axios.put(
 			APIROUTES.COMPLETE_REGISTER,
 			{
-				key_id,
+				key_id: keyId,
 				location: encryptLocation,
 				contact: encryptContact,
 				role: completeEnterprise.role,

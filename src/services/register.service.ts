@@ -23,7 +23,7 @@ export async function registerService(
 	const { credentials, contact } = newEnterprise
 
 	try {
-		const { encrypter, decrypter, key_id } = await encryptkeyService(keypair, publicPemKey)
+		const { encrypter, decrypter, keyId } = await encryptkeyService(keypair, publicPemKey)
 
 		const encryptCredentials = {
 			email: encryptData(encrypter, credentials.email),
@@ -34,7 +34,7 @@ export async function registerService(
 			phone: encryptData(encrypter, contact.phone)
 		}
 		const { data } = await axios.post(APIROUTES.REGISTER, {
-			key_id,
+			key_id: keyId,
 			company_name: newEnterprise.companyName,
 			credentials: encryptCredentials,
 			contact: encryptContact

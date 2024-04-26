@@ -8,7 +8,7 @@ import { pki } from 'node-forge'
 
 import { encryptkeyService } from './encryptkey.service'
 
-export async function getEmployeesService(keypair: pki.rsa.KeyPair | undefined, publicPemKey: string) {
+export async function getVacationEmployeesService(keypair: pki.rsa.KeyPair | undefined, publicPemKey: string) {
 	try {
 		const { decrypter, keyId } = await encryptkeyService(keypair, publicPemKey)
 		console.log('key id ', keyId)
@@ -22,9 +22,9 @@ export async function getEmployeesService(keypair: pki.rsa.KeyPair | undefined, 
 			}
 		}
 
-		const { data } = await axios.get(APIROUTES.EMPLOYEE.GET_ALL + '?key_id=' + keyId, config)
+		const { data } = await axios.get(APIROUTES.VACATION_LIST + '?key_id=' + keyId, config)
 		console.log(data)
-
+		/* 
 		data?.employees.forEach((e: any, i: any) => {
 			e.dni = decryptData(decrypter, e.dni)
 			Object.keys(e.contact).forEach(function (key) {
@@ -33,7 +33,7 @@ export async function getEmployeesService(keypair: pki.rsa.KeyPair | undefined, 
 			Object.keys(e.location).forEach(function (key) {
 				e.location[key] = decryptData(decrypter, e.location[key])
 			})
-		})
+		}) */
 
 		/* data?.employees.forEach((e: any, i: any) => {
 			e.contact.email = decryptData(decrypter, e.contact.email)

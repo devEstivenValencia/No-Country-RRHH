@@ -9,6 +9,7 @@ import useSecurity from "#/hooks/useSecurity";
 import { Employee } from "#/entities/Employee.entity";
 import { getEmployeesService } from "#/services/getEmployees.service";
 import { deleteEmployeeService } from "#/services";
+import { sleep } from "#/lib/utils";
 
 export default function Employees () {
 	const { error, keypairCreated, keypair, publicPemKey } = useSecurity();
@@ -30,6 +31,9 @@ export default function Employees () {
     }, [error]);
     
     async function fetchEmployees(){
+		while(!error && !keypairCreated){
+			await sleep(100)
+		}
         if(keypairCreated && publicPemKey){
             await getEmployeesService(keypair, publicPemKey )
                 .then((data) => setEmployees(data.employees))

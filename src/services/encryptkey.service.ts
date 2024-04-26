@@ -16,13 +16,13 @@ export async function encryptkeyService(keypair: pki.rsa.KeyPair | undefined, pu
 
 		const encrypter = cipher.createCipher('AES-CBC', decryptedServerKey)
 		const decrypter = cipher.createDecipher('AES-CBC', decryptedServerKey)
-		const key_id: string = data.key_id
+		const keyId: string = data.key_id
 
 		return new Promise(resolve => {
 			resolve({
 				encrypter,
 				decrypter,
-				key_id //guarda el id de la llave del servidor
+				keyId //guarda el id de la llave del servidor
 			})
 		})
 	} catch (reason: any) {

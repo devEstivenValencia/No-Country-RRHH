@@ -20,7 +20,7 @@ export async function employeeService(
 	const { dni, location, contact, credentials } = newEmployee.employee
 
 	try {
-		const { encrypter, key_id } = await encryptkeyService(keypair, publicPemKey)
+		const { encrypter, keyId } = await encryptkeyService(keypair, publicPemKey)
 		const encryptDni = encryptData(encrypter, dni)
 		const encryptLocation = {
 			country: encryptData(encrypter, location.country),
@@ -50,7 +50,7 @@ export async function employeeService(
 		const { data } = await axios.post(
 			APIROUTES.EMPLOYEE.CREATE,
 			{
-				key_id,
+				key_id: keyId,
 				company_id: companyIdEnctypted,
 				employee: {
 					name: newEmployee.employee.name,
