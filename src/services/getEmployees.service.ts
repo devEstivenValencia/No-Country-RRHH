@@ -14,7 +14,7 @@ export async function getEmployeesService(keypair: pki.rsa.KeyPair | undefined, 
 		console.log('key id ', keyId)
 
 		const session = Cookies.get('session')
-		let config = {
+		const config = {
 			headers: {
 				'Content-Type': 'application/json',
 				'Accept': 'application/json',

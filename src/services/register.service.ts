@@ -1,7 +1,6 @@
 'use client'
 
 import { APIROUTES } from '#/config/API.routes'
-import { Encrypters } from '#/entities/Encrypters.entity'
 import { NewEnterprise, newEnterpriseSchema } from '#/entities/NewEnterprise.entity'
 import { schemaIsValid } from '#/utils/schemaValidator.util'
 import { decryptData, encryptData } from '#/utils/securityFunctions.util'
@@ -40,7 +39,7 @@ export async function registerService(
 			contact: encryptContact
 		})
 
-		let { session, user } = data
+		const { session, user } = data
 
 		user.contact.email = decryptData(decrypter, user.contact.email)
 		user.contact.phone = decryptData(decrypter, user.contact.phone)
@@ -48,6 +47,7 @@ export async function registerService(
 		console.log(user)
 		Cookies.set('session', session)
 		localStorage.setItem('user', JSON.stringify(user))
+		localStorage.setItem('type', user?.type)
 		return data
 	} catch (reason: any) {
 		const { message } = reason.response?.data || reason

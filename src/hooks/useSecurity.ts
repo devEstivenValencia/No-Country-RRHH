@@ -3,9 +3,9 @@
 import { pki } from 'node-forge'
 import { useEffect, useState } from 'react'
 
-function useSecurity() {
-	const [keypair, setKeypair] = useState<pki.rsa.KeyPair>() //claves publicas y privadas generadas en el navegador del usuario
-	const [publicPemKey, setPublicPemKey] = useState<string>() //clave publica en formato pem para enviar al servidor
+function useSecurity(): any {
+	const [keypair, setKeypair] = useState<pki.rsa.KeyPair>() // claves publicas y privadas generadas en el navegador del usuario
+	const [publicPemKey, setPublicPemKey] = useState<string>() // clave publica en formato pem para enviar al servidor
 
 	const [keypairCreated, setKeypairCreated] = useState<boolean>(false)
 	const [error, setError] = useState<string>('')
@@ -23,13 +23,6 @@ function useSecurity() {
 			})
 		}, 100)
 	}, [])
-
-	function generateKeyPair(intent: number) {
-		if (intent < 3) {
-		} else {
-			setError('the key pair could not be created')
-		}
-	}
 
 	return { error, keypairCreated, keypair, publicPemKey }
 }

@@ -7,7 +7,6 @@ import * as v from 'valibot'
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { emailSchema } from "#/schemas";
 import { Password as PasswordEntity, passwordSchema } from '#/entities'
-import { useRouter } from "next/navigation";
 import { NewEmployee } from "#/entities/NewEmployee.entity";
 import { employeeService } from "#/services/newEmployee.service";
 import { sleep } from "#/lib/utils";
@@ -43,9 +42,8 @@ const formEmployeeSchema = v.object({
         role: v.string()
       })
 
-export function EmployeeForm (props: { reset: Function, open: Boolean, setOpen: Function }) {
+export function EmployeeForm (props: { reset: Function, open: boolean, setOpen: Function }) {
 	const { error, keypairCreated, keypair, publicPemKey } = useSecurity();
-    const router = useRouter()
 
     const handleFormReset = () => {form.reset()}
 
@@ -62,6 +60,7 @@ export function EmployeeForm (props: { reset: Function, open: Boolean, setOpen: 
     } = form
 
     async function onSubmit(values: EmployeeValues) {
+		// eslint-disable-next-line no-unmodified-loop-condition
 		while(!error && !keypairCreated){
 			await sleep(100)
 		}
@@ -100,7 +99,7 @@ export function EmployeeForm (props: { reset: Function, open: Boolean, setOpen: 
     }
 
     return (
-        <Dialog open={props.open} onOpenChange={props.setOpen}>
+        <Dialog open={props.open || false} onOpenChange={(open)=>{props.setOpen(open)}}>
             <DialogTrigger asChild className="bg-slate-400">
                 <Button variant='outline' className="bg-green-400 hover:bg-green-500 text-neutro-50 md:gap-4 gap-1 ">
                     Agregar

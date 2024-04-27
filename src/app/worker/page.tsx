@@ -1,20 +1,19 @@
 'use client'
 
 import Script from 'next/script'
-import { Icon, Typography } from "#/components";
+import { Icon, Typography, Button } from "#/components";
 import { APPROUTES } from "#/config/APP.routes";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "#/components";
 import Cookies from 'js-cookie'
 import { useRouter } from "next/navigation";
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "#/components/ui/dialog";
-import { useState } from "react";
 import { SendVacationService } from "#/services";
 
-export default function worker () {
+export default function WorkerPage () {
 
     const router = useRouter()
+
     function onClick(){
 		Cookies.remove('session')
 		localStorage.removeItem('user')
@@ -22,8 +21,8 @@ export default function worker () {
     }
 
     async function sendForm(){
-        let initialDate = document.getElementById('initial-date')?.getAttribute('value') || ''
-        let finalDate = document.getElementById('final-date')?.getAttribute('value') || ''
+        const initialDate: string = document.getElementById('initial-date')?.getAttribute('value') || ''
+        const finalDate: string = document.getElementById('final-date')?.getAttribute('value') || ''
         await SendVacationService(initialDate.split("/").reverse().join("-"),finalDate.split("/").reverse().join("-"))
             .then((data) => {})
             .catch(({ message }) => console.log(message))
@@ -64,7 +63,7 @@ export default function worker () {
                     <Button onClick={()=>sendForm()}>Enviar</Button>
                 </div>
             </section>
-            <Script src="http://no-country-rrhh.work.gd/calendario.js" />
+            <Script src="calendario.js" />
         </section>
     )
 }

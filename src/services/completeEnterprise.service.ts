@@ -36,7 +36,7 @@ export async function completeEnterpriseService(
 		}
 
 		const session = Cookies.get('session')
-		let config = {
+		const config = {
 			headers: {
 				'Content-Type': 'application/json',
 				'Accept': 'application/json',

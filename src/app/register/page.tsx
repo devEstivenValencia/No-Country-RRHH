@@ -50,6 +50,7 @@ export default function RegisterPage() {
 	} = form
 
 	async function onSubmit(values: RegisterValues) {
+		// eslint-disable-next-line no-unmodified-loop-condition
 		while(!error && !keypairCreated){
 			await sleep(100)
 		}

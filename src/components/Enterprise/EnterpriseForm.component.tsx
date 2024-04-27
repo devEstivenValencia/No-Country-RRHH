@@ -1,10 +1,9 @@
 'use client'
 
-import { Button, Typography } from "#/components";
 import { APPROUTES } from "#/config/APP.routes";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "#/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input, Loader} from "#/components";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input, Loader, Button, Typography} from "#/components";
 import { useForm } from "react-hook-form";
 import * as v from 'valibot'
 import { valibotResolver } from "@hookform/resolvers/valibot";
@@ -76,7 +75,7 @@ export function EnterpriseForm () {
     } = form
 
     async function onSubmit(values: CompleteEnterpriseValues) {
-
+        // eslint-disable-next-line no-unmodified-loop-condition
         while(!error && !keypairCreated){
             await sleep(100)
         }
@@ -98,7 +97,7 @@ export function EnterpriseForm () {
                 sector: values.sector
             }
     
-            let workingWeek: string[] = []
+            const workingWeek: string[] = []
             if(!monday) workingWeek.push('lu')
             if(!tuesday) workingWeek.push('ma')
             if(!wednesday) workingWeek.push('mi')

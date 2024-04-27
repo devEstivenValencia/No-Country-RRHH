@@ -8,9 +8,9 @@ import { useState } from "react";
 import Cookies from 'js-cookie'
 import { useRouter } from "next/navigation";
 import { Dialog } from "@radix-ui/react-dialog";
-import { DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "#/components/ui/dialog";
+import { DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "#/components/ui/dialog";
 
-export default function Layout ({children} : {children: React.ReactNode}) {
+export default function Layout ({children} : {children: any}) {
 
     const [openMenu, setOpenMenu] = useState(false)
     const handleOpenMenu = () => setOpenMenu(!openMenu)

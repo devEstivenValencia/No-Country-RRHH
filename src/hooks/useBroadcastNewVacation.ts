@@ -1,9 +1,13 @@
+'use client'
+
 import Pusher from 'pusher-js'
-import * as PusherTypes from 'pusher-js'
+
+/* 
+import * as PusherTypes from 'pusher-js' */
 import { useEffect, useState } from 'react'
 
 function useBroadcastNewVacation() {
-	const [vacation, setVacation] = useState<number>(0)
+	const [vacation, setVacation] = useState<string>('')
 
 	useEffect(() => {
 		const user = JSON.parse(localStorage.getItem('user') || '{}')
@@ -17,8 +21,8 @@ function useBroadcastNewVacation() {
 
 			const channel = pusher.subscribe('new-vacation')
 			channel.bind(userId, function (data: string) {
-				alert(JSON.stringify(vacation + 1))
-				setVacation(vacation + 1)
+				alert(JSON.stringify(data))
+				setVacation(data)
 			})
 
 			return () => {

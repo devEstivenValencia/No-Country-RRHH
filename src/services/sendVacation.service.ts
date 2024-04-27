@@ -7,7 +7,7 @@ import Cookies from 'js-cookie'
 export async function SendVacationService<T>(initialDate: string, finalDate: string): Promise<T | undefined> {
 	try {
 		const session = Cookies.get('session')
-		let config = {
+		const config = {
 			headers: {
 				'Content-Type': 'application/json',
 				'Accept': 'application/json',

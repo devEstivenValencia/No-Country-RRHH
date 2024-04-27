@@ -30,6 +30,7 @@ export default function LoginPage() {
 	} = form
 
 	async function onSubmit(credentials: Credentials) {
+		// eslint-disable-next-line no-unmodified-loop-condition
 		while(!error && !keypairCreated){
 			await sleep(100)
 		}
@@ -37,7 +38,7 @@ export default function LoginPage() {
 			await loginService(credentials, keypair, publicPemKey )
 				.then(() => {
 					const user = JSON.parse(localStorage.getItem('user') || '{}')
-					if (user?.type == 'employee'){
+					if (user?.type === 'employee'){
 						router.push(APPROUTES.WORKER)
 					}else{
 						router.push(APPROUTES.DASHBOARD)

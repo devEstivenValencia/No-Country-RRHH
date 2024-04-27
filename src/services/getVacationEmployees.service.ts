@@ -1,7 +1,6 @@
 'use client'
 
 import { APIROUTES } from '#/config/API.routes'
-import { decryptData } from '#/utils/securityFunctions.util'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import { pki } from 'node-forge'
@@ -10,11 +9,11 @@ import { encryptkeyService } from './encryptkey.service'
 
 export async function getVacationEmployeesService(keypair: pki.rsa.KeyPair | undefined, publicPemKey: string) {
 	try {
-		const { decrypter, keyId } = await encryptkeyService(keypair, publicPemKey)
+		const { keyId } = await encryptkeyService(keypair, publicPemKey)
 		console.log('key id ', keyId)
 
 		const session = Cookies.get('session')
-		let config = {
+		const config = {
 			headers: {
 				'Content-Type': 'application/json',
 				'Accept': 'application/json',

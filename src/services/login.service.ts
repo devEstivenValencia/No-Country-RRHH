@@ -28,7 +28,7 @@ export async function loginService(
 			password: encryptData(encrypter, credentials.password)
 		}
 		const { data } = await axios.post(APIROUTES.SESSION.LOGIN, encryptCredentials)
-		let { session, user } = data
+		const { session, user } = data
 
 		if (user?.contact) {
 			user.contact.email = decryptData(decrypter, user.contact.email)
@@ -38,6 +38,7 @@ export async function loginService(
 
 		Cookies.set('session', session)
 		localStorage.setItem('user', JSON.stringify(user))
+		localStorage.setItem('type', user?.type)
 		return data
 	} catch (reason: any) {
 		const { message } = reason.response?.data || reason

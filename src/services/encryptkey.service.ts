@@ -22,7 +22,7 @@ export async function encryptkeyService(keypair: pki.rsa.KeyPair | undefined, pu
 			resolve({
 				encrypter,
 				decrypter,
-				keyId //guarda el id de la llave del servidor
+				keyId // guarda el id de la llave del servidor
 			})
 		})
 	} catch (reason: any) {

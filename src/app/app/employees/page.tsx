@@ -12,12 +12,12 @@ import { APPROUTES } from "#/config/APP.routes";
 import { useRouter } from "next/navigation";
 import { sleep } from "#/lib/utils";
 
-export default function Employees () {
-	const { error, keypairCreated, keypair, publicPemKey } = useSecurity();
-    const [loading, setLoading] = useState<boolean>(true)
-    const [employees, setEmployees] = useState<Employee[]>([])
-    const [errorFetch, setErrorFetch] = useState<string>('')
-    const [user,setUser] = useState();
+export default function EmployeesPage () {
+	const { error, keypairCreated, keypair, publicPemKey } = useSecurity();/* 
+    const [loading, setLoading] = useState<boolean>(true) */
+    const [employees, setEmployees] = useState<Employee[]>([])/* 
+    const [errorFetch, setErrorFetch] = useState<string>('') */
+    const [user,setUser] = useState<any>();
     const [userLoading,setUserLoading] = useState(false);
     const router = useRouter()
 
@@ -29,37 +29,38 @@ export default function Employees () {
     useEffect(() => {
         fetchEmployees()
     }, [keypairCreated])
-
+/* 
     useEffect(() => {
         if(error) setErrorFetch(error)
-    }, [error]);
+    }, [error]); */
     
     async function fetchEmployees(){
+		// eslint-disable-next-line no-unmodified-loop-condition
 		while(!error && !keypairCreated){
 			await sleep(100)
 		}
         if(keypairCreated && publicPemKey){
             await getEmployeesService(keypair, publicPemKey )
-                .then((data) => setEmployees(data.employees))
+                .then((data) => setEmployees(data.employees))/* 
                 .catch(({ message }) => setErrorFetch(message))
-                .finally(() => setLoading(false))
-        }else{
-            setErrorFetch(error)
+                .finally(() => setLoading(false)) */
+        }else{/* 
+            setErrorFetch(error) */
         }
     }
 
     function editEmployee(id: string){
 
     }
-    async function deleteEmployee(id: string){
-        setLoading(true)
+    async function deleteEmployee(id: string){/* 
+        setLoading(true) */
         deleteEmployeeService(id)
         .then((data) => {
             setEmployees([])
             fetchEmployees()
-        })
+        })/* 
         .catch(({ message }) => setErrorFetch(message))
-        .finally(() => setLoading(false))
+        .finally(() => setLoading(false)) */
     }
 
     function reset(){

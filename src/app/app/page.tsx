@@ -5,46 +5,30 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "#
 import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle } from "#/components/ui/card";
 import { useRouter } from "next/navigation";
-import { APPROUTES } from "#/config/APP.routes";
-import useBroadcastNewVacation from "#/hooks/useBroadcastNewVacation";
+import { APPROUTES } from "#/config/APP.routes";/* 
+import useBroadcastNewVacation from "#/hooks/useBroadcastNewVacation"; */
 import { VacationEmployee } from "#/entities/VacationEmployee.entity";
 import { getVacationEmployeesService } from "#/services";
-import useSecurity from "#/hooks/useSecurity";
-import { sleep } from "#/lib/utils";
-import Pusher from 'pusher-js'
-import * as PusherTypes from 'pusher-js'
+import useSecurity from "#/hooks/useSecurity";/* 
+import { sleep } from "#/lib/utils"; *//* 
+import Pusher from 'pusher-js' *//* 
+import * as PusherTypes from 'pusher-js' */
+import useBroadcastNewVacation from "#/hooks/useBroadcastNewVacation";
 
-export default function App() {
+export default function Dashboard() {
+	const [vacation] = useBroadcastNewVacation()
 	const { error, keypairCreated, keypair, publicPemKey } = useSecurity();
     const [vacations, setVacations] = useState<VacationEmployee[]>([])
-    const [clickAccions, setClickAccions] = useState(true);
-    const [loading, setLoading] = useState(true);
+    const [clickAccions, setClickAccions] = useState(true);/* 
+    const [loading, setLoading] = useState(true); */
     const [user,setUser] = useState<any>();
     const [userLoading,setUserLoading] = useState(false);
     const handleClickAccions = () => setClickAccions(!clickAccions);
-	const router = useRouter()
-	const [vacation, setVacation] = useState<string>('')
-
+	const router = useRouter()/* 
+	const [vacation, setVacation] = useState<string>('') */
+/* 
 	useEffect(() => {
-		const user = JSON.parse(localStorage.getItem('user') || '{}')
-		if (user?.type === 'company') {
-			console.log('registrandose')
-			const userId = user.id
-
-			const pusher = new Pusher('30dc5d26e21ba3445b18', {
-				cluster: 'us2'
-			})
-
-			const channel = pusher.subscribe('new-vacation')
-			channel.bind(userId, function (data: string) {
-				setVacation(data)
-			})
-
-			return () => {
-				pusher.unsubscribe('new-vacation')
-			}
-		}
-	}, [])
+	}, []) */
 
     useEffect(()=>{
         const user = JSON.parse(localStorage.getItem('user') || '{}')
@@ -58,6 +42,7 @@ export default function App() {
     },[])
 
     useEffect(() => {
+        setVacations([])
         fetchEmployees()
     }, [keypairCreated,vacation]);
 
@@ -67,8 +52,8 @@ export default function App() {
             console.log('await')
             await getVacationEmployeesService(keypair, publicPemKey )
                 .then((data) => setVacations(data.employees))
-                .catch(({ message }) => console.log(message))
-                .finally(() => setLoading(false))
+                .catch(({ message }) => console.log(message))/* 
+                .finally(() => setLoading(false)) */
         }else{/* 
             setErrorFetch(error) */
             console.log(error)
