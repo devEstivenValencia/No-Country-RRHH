@@ -58,9 +58,16 @@ export default function WorkerPage () {
             <Typography as="h3" className="pt-28 pl-10 text-secondary-500 font-bold">Nombre de la empresa</Typography>
             
             <section className="flex flex-col justify-center items-center mt-10">
-                <div className="bg-[#FFFFFF] md:min-w-[900px] md:min-h-[500px] rounded-3xl shadow-md">
-                    <div id="calendario"></div>
-                    <Button onClick={()=>sendForm()}>Enviar</Button>
+                <div className="bg-[#FFFFFF] md:min-w-[900px] md:min-h-[500px] rounded-3xl shadow-md mb-20">
+                <div className=" p-10 ">
+                        <Typography as="h4" className="text-secondary-500 font-semibold">Selección de Fechas de Vacaciones</Typography>
+                        <Typography as="p" className="text-neutro-800 w-[600px]">Este módulo te permite seleccionar las fechas en las que desea tomar sus vacaciones. Simplemente elija las fechas de inicio y fin de su período de descanso y envíe la solicitud. Una vez enviada, su solicitud de vacaciones será enviada al departamento correspondiente para su aprobación.</Typography>
+                    </div>
+                    <div id="calendario" className=''></div>
+                    <div className='flex justify-center'>
+                        <Button onClick={()=>sendForm()} className='bg-secondary-500 rounded-3xl text-neutro-50 w-20 flex justify-center my-10 shadow-md'>Enviar</Button>
+                    </div>
+                    
                 </div>
             </section>
             <Script src="calendario.js" />
