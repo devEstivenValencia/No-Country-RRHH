@@ -38,7 +38,7 @@ export async function loginService(
 
 		Cookies.set('session', session)
 		localStorage.setItem('user', JSON.stringify(user))
-		localStorage.setItem('type', user?.type)
+		Cookies.set('type', user?.type)
 		return data
 	} catch (reason: any) {
 		const { message } = reason.response?.data || reason

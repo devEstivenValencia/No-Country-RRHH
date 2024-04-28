@@ -4,6 +4,7 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
+		"dev-https": "next dev --experimental-https",
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",

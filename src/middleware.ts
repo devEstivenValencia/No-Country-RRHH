@@ -14,7 +14,8 @@ export async function middleware(request: NextRequest) {
 			if (pathname === APPROUTES.LOGIN || pathname === APPROUTES.REGISTER) {
 				console.error('se va al dashboard')
 
-				const type = JSON.parse(localStorage.getItem('type') || 'employee')
+				const type = request.cookies.get('type')?.value || 'employee'
+
 				if (type === 'employee') return NextResponse.redirect(new URL(APPROUTES.WORKER, request.url))
 
 				return NextResponse.redirect(new URL(APPROUTES.DASHBOARD, request.url))
@@ -36,7 +37,7 @@ export async function middleware(request: NextRequest) {
 
 		throw new Error('Sesion no encontrada en el Navegador')
 	} catch (reason: any) {
-		// console.error('❗', 'Middleware de sesion fallo:', '\n', reason)
+		console.error('❗', 'Middleware de sesion fallo:', '\n', reason)
 		if (pathname === APPROUTES.LOGIN || pathname === APPROUTES.REGISTER || pathname === APPROUTES.HOME)
 			return NextResponse.next()
 
