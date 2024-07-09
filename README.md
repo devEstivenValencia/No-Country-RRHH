@@ -18,7 +18,7 @@
 
 ## Overview
 
-![screenshot](https://github.com/devEstivenValencia/No-Country-RRHH/blob/main/screenshot.jpeg)
+![screenshot](https://github.com/devEstivenValencia/No-Country-RRHH/blob/070e68696ae22db2e4ded56541ad0dadcc4c0cdd/screenshot.jpeg)
 
 Software that offers an efficient and accessible
 solution for companies seeking to optimize their
