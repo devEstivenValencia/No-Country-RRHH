@@ -37,13 +37,13 @@ personnel management processes.
 
 <!-- List the features of your application or follow the template. Don't share the figma file here :) -->
 
--Create a company.
--Registered companies can create employee accounts.
--Companies can delete and/or edit each employee's information.
--Employees have their own dashboad upon login.
--Employees can send a vacations range ( initial and final date ).
--The comunication between client and back-end is e2e encrypted.
--The sensitive information stored on database is encrypted.
+- Create a company.
+- Registered companies can create employee accounts.
+- Companies can delete and/or edit each employee's information.
+- Employees have their own dashboad upon login.
+- Employees can send a vacations range ( initial and final date ).
+- The comunication between client and back-end is e2e encrypted.
+- The sensitive information stored on database is encrypted.
 
 ## Front-end
 
