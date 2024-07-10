@@ -78,7 +78,7 @@ class EmployeeStoreRequest extends CustomFormRequest
                     'min:8',
                     'regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/'
                 ],
-                'employee.admission_date' => 'required|date',
+                'employee.admission_date' => 'required|date_format:Y-m-d',
                 'employee.role' => 'required|string'
             ];
     }
@@ -104,7 +104,7 @@ class EmployeeStoreRequest extends CustomFormRequest
             'employee.contact.phone.required' => 'El teléfono del empleado es obligatorio',
             'employee.contact.phone.string' => 'El teléfono del empleado debe ser texto',
             'employee.admission_date.required' => 'La fecha de contratación del empleado es obligatorio',
-            'employee.admission_date.date' => 'La fecha de contratación del empleado debe ser una fecha válida',
+            'employee.admission_date.date_format' => 'La fecha de contratación del empleado debe ser una fecha válida',
             'employee.role.required' => 'El rol del empleado es obligatorio',
             'employee.role.string' => 'El rol del empleado debe ser texto',
 

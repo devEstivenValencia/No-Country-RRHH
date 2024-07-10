@@ -4,14 +4,14 @@ namespace Tests\Unit;
 
 use App\Models\KeyManager;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class KeyManagerTest extends TestCase
 {
-    /**
-     * A basic unit test example.
-     */
+    use RefreshDatabase;
+
     public function test_example(): void
     {
         $rand = random_bytes(32);

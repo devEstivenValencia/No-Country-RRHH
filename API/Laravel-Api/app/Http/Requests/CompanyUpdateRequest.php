@@ -67,7 +67,6 @@ class CompanyUpdateRequest extends CustomFormRequest
             'location.address' => 'required|string',
             /* 
             'location.zipcode' => 'required|string', */
-            'role' => 'required|string',
             'sector' => 'required|string',
         ];
     }
@@ -88,9 +87,6 @@ class CompanyUpdateRequest extends CustomFormRequest
             'location.city.required' => 'La ciudad del empleado es obligatoria',
             'location.address.string' => 'La dirección del empleado debe ser texto',
             'location.address.required' => 'La dirección del empleado es obligatoria',
-
-            'role.required' => 'El rol del empleado es obligatorio',
-            'role.string' => 'El rol del empleado debe ser texto',
 
             'sector.required' => 'El rol del empleado es obligatorio',
             'sector.string' => 'El rol del empleado debe ser texto',

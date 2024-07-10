@@ -12,11 +12,8 @@ use Illuminate\Support\Str;
 
 class CompanyModelTest extends TestCase
 {
-    /* 
-    use RefreshDatabase; */
-    /**
-     * A basic unit test example.
-     */
+    use RefreshDatabase;
+
     public function test_create_user_company(): void
     {
         $user = new User();

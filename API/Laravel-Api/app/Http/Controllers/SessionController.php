@@ -39,8 +39,8 @@ class SessionController extends Controller
                                 'type' => 'company',
                                 'verified' => $company->verified,
                                 'contact' => [
-                                    'email' => CustomEncrypter::encryptOpenSSL($company->contact['email'], $sharedKey),
-                                    'phone' => CustomEncrypter::encryptOpenSSL($company->contact['phone_number'], $sharedKey),
+                                    'email' => CustomEncrypter::encryptOpenSSL(isset($company->contact['email']) ? $company->contact['email'] : '', $sharedKey),
+                                    'phone' => CustomEncrypter::encryptOpenSSL(isset($company->contact['email']) ? $company->contact['phone_number'] : '', $sharedKey),
                                 ]
                             ]
                         )

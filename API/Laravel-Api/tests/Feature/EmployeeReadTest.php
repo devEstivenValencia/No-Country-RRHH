@@ -2,19 +2,20 @@
 
 namespace Tests\Feature;
 
+use App\Classes\CustomEncrypter;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Company;
 use App\Models\Employee;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
 class EmployeeReadTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     */
-    public function test_example(): void
+    use RefreshDatabase;
+
+    public function test_read_employee(): void
     {
         $user_company = new User();
         $user_company->id = Str::uuid(36);
@@ -62,19 +63,24 @@ class EmployeeReadTest extends TestCase
 
         $employee->save();
 
+        $keypair = CustomEncrypter::getKeyPairForTests();
+        $publicPem = $keypair['publicPem'];
+        $privatePem = $keypair['privatePem'];
 
-        $credentialsToEncrypt = [
-            'email' => 'employee-read-company@email.com',
-            'password' => 'AAAbbb111222@'
-        ];
-
-        $response = $this->postJson('/api/encrypt', $credentialsToEncrypt);
-        $response->assertStatus(200)->assertJsonStructure([
-            'email',
-            'password'
+        // Obtener la clave dinámica para encriptar la información sensible
+        $encryptionKeyResponse = $this->postJson('/api/encryptkey', [
+            'publicKey' => $publicPem
         ]);
 
-        $credentials = $response->json();
+        $keyId = $encryptionKeyResponse["key_id"];
+        $encryptedKey = $encryptionKeyResponse["encryptedKey"];
+        openssl_private_decrypt(base64_decode($encryptedKey), $sharedKey, $privatePem, OPENSSL_PKCS1_PADDING);
+
+        $credentials = [
+            'key_id' => $keyId,
+            'email' => CustomEncrypter::encryptOpenSSL('employee-read-company@email.com', $sharedKey),
+            'password' => CustomEncrypter::encryptOpenSSL('AAAbbb111222@', $sharedKey)
+        ];
 
         $response = $this->postJson(
             '/api/session/login',
@@ -83,21 +89,29 @@ class EmployeeReadTest extends TestCase
         $response->assertStatus(200);
 
         $token = $response['session'];
+
+        $encryptionKeyResponse = $this->postJson('/api/encryptkey', [
+            'publicKey' => $publicPem
+        ]);
+
+        $keyId = $encryptionKeyResponse["key_id"];
+        $encryptedKey = $encryptionKeyResponse["encryptedKey"];
+        openssl_private_decrypt(base64_decode($encryptedKey), $sharedKey, $privatePem, OPENSSL_PKCS1_PADDING);
+
         $response = $this->withHeaders(['Authorization' => 'Bearer ' . $token])
-            ->getJson('/api/enterprise/employee');
+            ->getJson('/api/enterprise/employee?key_id=' . $keyId);
         $response->assertStatus(200)->assertJsonStructure([
             'company_id',
             'employees' => [
                 '*' => [
-                    'employee_id',
+                    'id',
                     'name',
                     'dni',
-                    'address' => [
+                    'location' => [
                         'country',
                         'province',
                         'city',
-                        'address',
-                        'zipcode'
+                        'address'
                     ],
                     'contact' => [
                         'email',

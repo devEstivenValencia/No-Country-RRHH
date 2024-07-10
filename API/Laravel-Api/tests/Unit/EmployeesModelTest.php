@@ -5,12 +5,15 @@ namespace Tests\Unit;
 use App\Models\Company;
 use App\Models\Employee;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class EmployeesModelTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_create_employee_with_data(): void
     {
 

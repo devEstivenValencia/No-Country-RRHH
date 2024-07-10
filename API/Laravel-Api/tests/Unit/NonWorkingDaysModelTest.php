@@ -5,15 +5,15 @@ namespace Tests\Unit;
 use App\Models\Company;
 use App\Models\NonWorkingDays;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class NonWorkingDaysModelTest extends TestCase
 {
-    /**
-     * A basic unit test example.
-     */
+    use RefreshDatabase;
+
     public function test_create_non_working_day(): void
     {
         $user = new User();

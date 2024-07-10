@@ -2,30 +2,27 @@
 
 namespace Tests\Feature;
 
+use App\Classes\CustomEncrypter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class UserApiTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     */
-    public function encrypt_test()
-    {
-        $userData = [
-            'email' => 'kyow785@gmail.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
-        ];
+    use RefreshDatabase;
 
-        $response = $this->postJson('/api/encrypt', $userData);
+    public function test_get_encrypt_key()
+    {
+        $keypair = CustomEncrypter::getKeyPairForTests();
+        $publicPem = $keypair['publicPem'];
+
+        $response = $this->postJson('/api/encryptkey', [
+            'publicKey' => $publicPem
+        ]);
 
         $response->assertStatus(200)
-            ->assertJson([
-                'email' => '...',
-                'password' => '...',
-                'password_confirmation' => '...',
+            ->assertJsonStructure([
+                'key_id',
+                'encryptedKey',
             ]);
     }
 }

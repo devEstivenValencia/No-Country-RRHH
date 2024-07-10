@@ -7,14 +7,14 @@ use App\Models\User;
 use App\Models\Company;
 use App\Models\Employee;
 use App\Models\Performance;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
 class PerformanceModelTest extends TestCase
 {
-    /**
-     * A basic unit test example.
-     */
+    use RefreshDatabase;
+
     public function test_create_performance(): void
     {
 

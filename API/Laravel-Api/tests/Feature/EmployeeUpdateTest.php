@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Classes\CustomEncrypter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -13,10 +13,9 @@ use App\Models\User;
 
 class EmployeeUpdateTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     */
-    public function test_example(): void
+    use RefreshDatabase;
+
+    public function test_update_employee(): void
     {
         $user_company = new User();
         $user_company->id = Str::uuid(36);
@@ -56,19 +55,24 @@ class EmployeeUpdateTest extends TestCase
 
         $employee->save();
 
+        $keypair = CustomEncrypter::getKeyPairForTests();
+        $publicPem = $keypair['publicPem'];
+        $privatePem = $keypair['privatePem'];
 
-        $credentialsToEncrypt = [
-            'email' => 'employee-update-company@email.com',
-            'password' => 'AAAbbb111222@'
-        ];
-
-        $response = $this->postJson('/api/encrypt', $credentialsToEncrypt);
-        $response->assertStatus(200)->assertJsonStructure([
-            'email',
-            'password'
+        // Obtener la clave dinámica para encriptar la información sensible
+        $encryptionKeyResponse = $this->postJson('/api/encryptkey', [
+            'publicKey' => $publicPem
         ]);
 
-        $credentials = $response->json();
+        $keyId = $encryptionKeyResponse["key_id"];
+        $encryptedKey = $encryptionKeyResponse["encryptedKey"];
+        openssl_private_decrypt(base64_decode($encryptedKey), $sharedKey, $privatePem, OPENSSL_PKCS1_PADDING);
+
+        $credentials = [
+            'key_id' => $keyId,
+            'email' => CustomEncrypter::encryptOpenSSL('employee-update-company@email.com', $sharedKey),
+            'password' => CustomEncrypter::encryptOpenSSL('AAAbbb111222@', $sharedKey)
+        ];
 
         $response = $this->postJson(
             '/api/session/login',
@@ -79,61 +83,40 @@ class EmployeeUpdateTest extends TestCase
         $token = $response['session'];
         $company_id = $response['user']['id'];
 
-
-        $requestToEncrypt = [
-            'company_id' => $company_id,
-            'employee' => [
-                'employee_id' => $user->id,
-                'dni' => '11111111',
-                'address' => [
-                    'country' => 'arg',
-                    'province' => 'bsas',
-                    'city' => 'ciudad falsa',
-                    'address' => 'direccion false',
-                    'zipcode' => 'ab555'
-                ],
-                'contact' => [
-                    'email' => 'test@gmail.com',
-                    'phone' => '0sadfs00'
-                ]
-            ]
-        ];
-
-        $response = $this->postJson('/api/encrypt', $requestToEncrypt);
-        $response->assertStatus(200)->assertJsonStructure([
-            'company_id',
-            'employee' => [
-                'employee_id',
-                'dni',
-                'address' => [
-                    'country',
-                    'province',
-                    'city',
-                    'address',
-                    'zipcode'
-                ],
-                'contact' => [
-                    'email',
-                    'phone'
-                ]
-            ]
+        $encryptionKeyResponse = $this->postJson('/api/encryptkey', [
+            'publicKey' => $publicPem
         ]);
 
-        $data = $response->json();
+        $keyId = $encryptionKeyResponse["key_id"];
+        $encryptedKey = $encryptionKeyResponse["encryptedKey"];
+        openssl_private_decrypt(base64_decode($encryptedKey), $sharedKey, $privatePem, OPENSSL_PKCS1_PADDING);
+
+        $data = [
+            'key_id' => $keyId,
+            'company_id' => CustomEncrypter::encryptOpenSSL($company_id, $sharedKey),
+            'employee' => [
+                'employee_id' => CustomEncrypter::encryptOpenSSL($user->id, $sharedKey),
+                'dni' => CustomEncrypter::encryptOpenSSL('11111111', $sharedKey),
+                'address' => [
+                    'country' => CustomEncrypter::encryptOpenSSL('arg', $sharedKey),
+                    'province' => CustomEncrypter::encryptOpenSSL('bsas', $sharedKey),
+                    'city' => CustomEncrypter::encryptOpenSSL('ciudad falsa', $sharedKey),
+                    'address' => CustomEncrypter::encryptOpenSSL('direccion false', $sharedKey),
+                    'zipcode' => CustomEncrypter::encryptOpenSSL('ab555', $sharedKey)
+                ],
+                'contact' => [
+                    'email' => CustomEncrypter::encryptOpenSSL('test@gmail.com', $sharedKey),
+                    'phone' => CustomEncrypter::encryptOpenSSL('0sadfs00', $sharedKey)
+                ],
+                'admission_date' => '2024-02-02',
+                'role' => 'developer'
+            ]
+        ];
 
         $response = $this->withHeaders(['Authorization' => 'Bearer ' . $token])
             ->putJson(
                 '/api/enterprise/employee/modify',
-                [
-                    'company_id' => $data['company_id'],
-                    'employee' => array_merge(
-                        $data['employee'],
-                        [
-                            'admission_date' => '2024-02-02',
-                            'role' => 'developer'
-                        ]
-                    )
-                ]
+                $data
             );
 
         $response->assertStatus(200);/* 

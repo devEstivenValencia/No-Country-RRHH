@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use App\Classes\CustomEncrypter;
+use App\Models\KeyManager;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class EmployeeUpdateRequest extends CustomFormRequest
 {
@@ -27,13 +29,33 @@ class EmployeeUpdateRequest extends CustomFormRequest
             ]
         ];
 
-        $dataDecrypted = CustomEncrypter::recurseSpecificSchema(
+        $keyManager = KeyManager::find($this->key_id);
+        if ($keyManager) {
+            $sharedKey = $keyManager->key;
+
+            $dataDecrypted = CustomEncrypter::recurseSpecificSchemaOpenSSL(
+                $this->toArray(),
+                $keyToDecrypt,
+                base64_decode($sharedKey)
+            );
+            $dataDecrypted['shared_key'] = $sharedKey;
+            //end new
+            $this->merge($dataDecrypted);
+        } else {
+            throw new HttpResponseException(
+                response()->json([
+                    'error' => 'BAD_REQUEST',
+                    'message' => 'error con la clave de encriptación'
+                ], 400)
+            );
+        }
+        /*  $dataDecrypted = CustomEncrypter::recurseSpecificSchema(
             array(CustomEncrypter::class, 'decryptString'),
             $this->toArray(),
             $keyToDecrypt
         );
 
-        $this->merge($dataDecrypted);
+        $this->merge($dataDecrypted); */
     }
 
     public function authorize(): bool
