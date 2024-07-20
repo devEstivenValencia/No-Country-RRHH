@@ -5,6 +5,7 @@ import { Password } from '#/components/Password'
 import Typography from '#/components/Typography.component'
 import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '#/components/ui'
 import { APPROUTES } from '#/config/APP.routes'
+import useSecurity from '#/hooks/useSecurity'
 import { Credentials, credentialsDefaultValues } from '#/entities/Credentials.entity'
 import { loginService } from '#/services/login.service'
 import Image from 'next/image'
@@ -12,7 +13,10 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 
+const sleep = ( ms: number ) => new Promise(resolve => setTimeout(resolve, ms));
+
 export default function LoginPage() {
+	const { error, keypairCreated, keypair, publicPemKey } = useSecurity();
 	const router = useRouter()
 
 	const form = useForm<Credentials>({
@@ -26,25 +30,42 @@ export default function LoginPage() {
 	} = form
 
 	async function onSubmit(credentials: Credentials) {
-		await loginService(credentials)
-			.then(res => router.push(APPROUTES.DASHBOARD))
-			.catch(({ message }) => setError('root.server', { message }))
+		// eslint-disable-next-line no-unmodified-loop-condition
+		while(!error && !keypairCreated){
+			await sleep(100)
+		}
+		if(keypairCreated && publicPemKey){
+			await loginService(credentials, keypair, publicPemKey )
+				.then(() => {
+					const user = JSON.parse(localStorage.getItem('user') || '{}')
+					if (user?.type === 'employee'){
+						router.push(APPROUTES.WORKER)
+					}else{
+						router.push(APPROUTES.DASHBOARD)
+					}
+				})
+				.catch(({ message }) => setError('root.server', {message}))
+		}else{
+			setError('root.server', { 'message': error })
+		}
 	}
 
 	return (
-		<section className='md:bg-primary-300 flex justify-center items-center h-screen'>
-			<div className='flex md:justify-center md:items-center md:shadow-md md:w-[1156px] md:h-[660px] md:rounded-3xl m:p-20 md:gap-10 bg-[#ffffff]'>
-				<Image
-					src='/images/login-image.png'
-					alt='Imagen Recursos'
-					width={500}
-					height={500}
-					className='hidden md:block'
-				/>
+		<section className='md:bg-primary-300 md:min-h-screen flex justify-center items-center py-4'>
+			<div className='flex md:justify-center md:items-center md:shadow-md md:w-[1156px-2rem] md:h-[600px]  md:rounded-3xl p-10 md:gap-20 bg-[#ffffff] md:mx-[2rem]'>
+				<figure className='md:w-[50%] md:max-w-[500px]'>
+					<Image
+						src='/images/login-image.png'
+						alt='Imagen Recursos'
+						width={500}
+						height={500}
+						className='hidden md:block'
+					/>
+				</figure>
 
 				<Form {...form}>
-					<form onSubmit={handleSubmit(onSubmit)} className='flex flex-col h-fit gap-4'>
-						<div>
+					<form onSubmit={handleSubmit(onSubmit)} className='flex flex-col h-fit gap-4 md:pr-[2-rem] md:w-[50%] md:max-w-[500px]'>
+						<div className='w-full'>
 							<Typography as='h2' className='text-primary-500 font-bold'>
 								Bienvenido/a
 							</Typography>
@@ -72,7 +93,7 @@ export default function LoginPage() {
 							name='password'
 							render={({ field }) => (
 								<FormItem>
-									<Password variant='current-password' {...field} />
+									<Password variant='current-password' {...field} className='w-full' />
 								</FormItem>
 							)}
 						/>
@@ -81,9 +102,9 @@ export default function LoginPage() {
 								disabled={isSubmitting}
 								variant='default'
 								type='submit'
-								className='bg-primary-500 text-neutro-50 font-bold h-9 md:w-[448px] w-72 shadow-md'
+								className='bg-primary-500 text-neutro-50 font-bold h-9 md:w-full md:max-w-[448px] w-full shadow-md '
 							>
-								{isSubmitting ? <Loader /> : 'Iniciar sesion'}
+								{isSubmitting ? <Loader /> : 'Iniciar Sesión'}
 							</Button>
 						</div>
 

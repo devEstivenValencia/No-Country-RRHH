@@ -4,6 +4,7 @@ import { Loader, Password, Typography } from '#/components'
 import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '#/components/ui'
 import { APPROUTES } from '#/config/APP.routes'
 import { NewEnterprise, Password as PasswordEntity, passwordSchema } from '#/entities'
+import useSecurity from '#/hooks/useSecurity'
 import { emailSchema } from '#/schemas'
 import { registerService } from '#/services'
 import { valibotResolver } from '@hookform/resolvers/valibot'
@@ -12,6 +13,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import * as v from 'valibot'
+import { sleep } from "#/lib/utils";
 
 const defaultValues = {
 	companyName: '',
@@ -32,6 +34,7 @@ const registerSchema = v.object({
 })
 
 export default function RegisterPage() {
+	const { error, keypairCreated, keypair, publicPemKey } = useSecurity();
 	const router = useRouter()
 
 	const form = useForm<RegisterValues>({
@@ -47,25 +50,34 @@ export default function RegisterPage() {
 	} = form
 
 	async function onSubmit(values: RegisterValues) {
-		const newEnterprise: NewEnterprise = {
-			companyName: values.companyName,
-			credentials: {
-				email: values.email,
-				password: values.password
-			},
-			contact: {
-				email: values.email,
-				phone: values.phone
-			}
+		// eslint-disable-next-line no-unmodified-loop-condition
+		while(!error && !keypairCreated){
+			await sleep(100)
 		}
-		await registerService(newEnterprise)
-			.then(() => router.push(APPROUTES.DASHBOARD))
-			.catch(({ message }) => setError('root.server', { message }))
+		if(keypairCreated && publicPemKey){
+			const newEnterprise: NewEnterprise = {
+				companyName: values.companyName,
+				credentials: {
+					email: values.email,
+					password: values.password
+				},
+				contact: {
+					email: values.email,
+					phone: values.phone
+				}
+			}
+			await registerService(newEnterprise, keypair, publicPemKey )
+				.then(() => router.push(APPROUTES.ENTERPRISE))
+				.catch(({ message }) => setError('root.server', {message}))
+		}else{
+			setError('root.server', { 'message': error })
+		}
 	}
 
+
 	return (
-		<section className='md:bg-secondary-300 md:h-screen flex justify-center items-center '>
-			<div className='flex md:justify-center md:items-center md:shadow-md md:w-[1156px] md:h-[900px] md:rounded-3xl p-10 md:gap-20 bg-[#ffffff]'>
+		<section className='md:bg-secondary-300 md:min-h-screen flex justify-center items-center py-4'>
+			<div className='flex md:justify-center md:items-center md:shadow-md md:w-[1156px-2rem] md:h-[900px] md:rounded-3xl p-10 md:gap-20 bg-[#ffffff] md:mx-[2rem]'>
 				<Image
 					src='/images/register-image.png'
 					alt='Imagen Recursos'
@@ -75,7 +87,7 @@ export default function RegisterPage() {
 				/>
 
 				<Form {...form}>
-					<form onSubmit={handleSubmit(onSubmit)} className='flex flex-col h-fit gap-4'>
+					<form onSubmit={handleSubmit(onSubmit)} className='flex flex-col h-fit gap-4 md:pr-[2-rem]'>
 						<div>
 							<Typography as='h2' className='text-secondary-500 font-bold'>
 								Bienvenido/a

@@ -1,3 +1,7 @@
 export * from './encrypt.service'
 export * from './login.service'
 export * from './register.service'
+export * from './encryptkey.service'
+export * from './deleteEmployee.service'
+export * from './getVacationEmployees.service'
+export * from './sendVacation.service'

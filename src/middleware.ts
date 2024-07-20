@@ -5,13 +5,21 @@ import { APPROUTES } from './config/APP.routes'
 
 export async function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl
-	console.log('middleware ejecutado en:', '\n', pathname)
+	// console.log('middleware ejecutado en:', '\n', pathname)
 
 	try {
 		const session = request.cookies.get('session')
+		console.log('cokies ', session)
 		if (session) {
-			if (pathname === APPROUTES.LOGIN || pathname === APPROUTES.REGISTER)
+			if (pathname === APPROUTES.LOGIN || pathname === APPROUTES.REGISTER) {
+				console.error('se va al dashboard')
+
+				const type = request.cookies.get('type')?.value || 'employee'
+
+				if (type === 'employee') return NextResponse.redirect(new URL(APPROUTES.WORKER, request.url))
+
 				return NextResponse.redirect(new URL(APPROUTES.DASHBOARD, request.url))
+			}
 			const { value: token } = session
 
 			await fetch(APIROUTES?.SESSION?.VALIDATE, {
